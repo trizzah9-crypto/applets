@@ -1,0 +1,10 @@
+[22-Nov-2025 13:52:28 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'business_id' in 'field list' in D:\xammp\htdocs\b2b\ajax\add_customer.php:40
+Stack trace:
+#0 D:\xammp\htdocs\b2b\ajax\add_customer.php(40): mysqli->prepare('INSERT INTO cus...')
+#1 {main}
+  thrown in D:\xammp\htdocs\b2b\ajax\add_customer.php on line 40
+[22-Nov-2025 13:55:04 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'business_id' in 'field list' in D:\xammp\htdocs\b2b\ajax\add_customer.php:40
+Stack trace:
+#0 D:\xammp\htdocs\b2b\ajax\add_customer.php(40): mysqli->prepare('INSERT INTO cus...')
+#1 {main}
+  thrown in D:\xammp\htdocs\b2b\ajax\add_customer.php on line 40
