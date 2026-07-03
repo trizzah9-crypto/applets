@@ -870,7 +870,7 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                     <span class="soft-pill bg-light text-dark">
                         <i class="bi bi-shield-check text-success"></i>
-                        SQLite PDO via $conn
+                        Detailed CRM
                     </span>
                 </div>
 

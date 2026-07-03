@@ -995,6 +995,7 @@ $orderGrowthDisplay    = $orderGrowth === null ? '—' : number_format(abs($orde
             0 8px 25px rgba(14,37,62,.10),
             inset 0 1px 0 rgba(255,255,255,.12);
         width: 90%;
+        margin-left: 7px;
     }
 
     .stat-card .card-body{
