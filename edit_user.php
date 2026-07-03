@@ -43,255 +43,255 @@ if (!$user) {
 
 <style>
 
-:root{
-    --primary:#054960;
-    --primary-light:#0a5d78;
-    --primary-bright:#0f7c9d;
+        :root{
+            --primary:#054960;
+            --primary-light:#0a5d78;
+            --primary-bright:#0f7c9d;
 
-    --accent:#ff7900;
-    --accent-light:#ff9d3f;
+            --accent:#ff7900;
+            --accent-light:#ff9d3f;
 
-    --radius-xl:28px;
-    --radius-lg:22px;
-    --radius-md:18px;
+            --radius-xl:28px;
+            --radius-lg:22px;
+            --radius-md:18px;
 
-    --glass:rgba(255,255,255,.78);
-    --glass-border:rgba(255,255,255,.45);
+            --glass:rgba(255,255,255,.78);
+            --glass-border:rgba(255,255,255,.45);
 
-    --shadow-xl:
-        0 30px 60px rgba(5,73,96,.15);
+            --shadow-xl:
+                0 30px 60px rgba(5,73,96,.15);
 
-    --shadow-lg:
-        0 20px 45px rgba(5,73,96,.12);
+            --shadow-lg:
+                0 20px 45px rgba(5,73,96,.12);
 
-    --shadow-md:
-        0 10px 30px rgba(5,73,96,.08);
-}
+            --shadow-md:
+                0 10px 30px rgba(5,73,96,.08);
+        }
 
-body{
-    min-height:100vh;
+        body{
+            min-height:100vh;
 
-    background:
-        radial-gradient(circle at top left,#dff5ff,#f4f8fb);
+            background:
+                radial-gradient(circle at top left,#dff5ff,#f4f8fb);
 
-    font-family:"Segoe UI",sans-serif;
-}
+            font-family:"Segoe UI",sans-serif;
+        }
 
-/* HERO */
+        /* HERO */
 
-.hero-section{
-    background:linear-gradient(
-        135deg,
-        var(--primary),
-        var(--primary-light),
-        var(--primary-bright)
-    );
+        .hero-section{
+            background:linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-light),
+                var(--primary-bright)
+            );
 
-    border-radius:var(--radius-xl);
+            border-radius:var(--radius-xl);
 
-    padding:35px;
+            padding:35px;
 
-    color:white;
+            color:white;
 
-    box-shadow:var(--shadow-xl);
+            box-shadow:var(--shadow-xl);
 
-    margin-bottom:35px;
-}
+            margin-bottom:35px;
+        }
 
-.hero-title{
-    font-size:34px;
-    font-weight:700;
-    margin-bottom:8px;
-}
+        .hero-title{
+            font-size:34px;
+            font-weight:700;
+            margin-bottom:8px;
+        }
 
-.hero-subtitle{
-    opacity:.9;
-    font-size:15px;
-}
+        .hero-subtitle{
+            opacity:.9;
+            font-size:15px;
+        }
 
-.hero-badge{
-    display:inline-block;
+        .hero-badge{
+            display:inline-block;
 
-    padding:10px 18px;
+            padding:10px 18px;
 
-    background:rgba(255,255,255,.15);
+            background:rgba(255,255,255,.15);
 
-    border-radius:50px;
+            border-radius:50px;
 
-    backdrop-filter:blur(15px);
+            backdrop-filter:blur(15px);
 
-    margin-top:18px;
-}
+            margin-top:18px;
+        }
 
-/* FORM CARD */
+        /* FORM CARD */
 
-.form-card{
-    background:var(--glass);
+        .form-card{
+            background:var(--glass);
 
-    backdrop-filter:blur(20px);
+            backdrop-filter:blur(20px);
 
-    border:1px solid var(--glass-border);
+            border:1px solid var(--glass-border);
 
-    border-radius:var(--radius-xl);
+            border-radius:var(--radius-xl);
 
-    padding:40px;
+            padding:40px;
 
-    box-shadow:var(--shadow-lg);
-}
+            box-shadow:var(--shadow-lg);
+        }
 
-/* LABELS */
+        /* LABELS */
 
-.form-label{
-    font-weight:600;
-    color:var(--primary);
-    margin-bottom:10px;
-}
+        .form-label{
+            font-weight:600;
+            color:var(--primary);
+            margin-bottom:10px;
+        }
 
-/* INPUTS */
+        /* INPUTS */
 
-.form-control{
-    height:58px;
+        .form-control{
+            height:58px;
 
-    border-radius:18px;
+            border-radius:18px;
 
-    border:1px solid rgba(5,73,96,.12);
+            border:1px solid rgba(5,73,96,.12);
 
-    background:rgba(255,255,255,.7);
+            background:rgba(255,255,255,.7);
 
-    padding-left:20px;
+            padding-left:20px;
 
-    transition:.3s;
-}
+            transition:.3s;
+        }
 
-.form-control:focus{
-    border-color:var(--primary-bright);
+        .form-control:focus{
+            border-color:var(--primary-bright);
 
-    box-shadow:
-        0 0 0 4px rgba(15,124,157,.12);
+            box-shadow:
+                0 0 0 4px rgba(15,124,157,.12);
 
-    background:white;
-}
+            background:white;
+        }
 
-.form-control[readonly]{
-    background:#f8fafc;
-}
+        .form-control[readonly]{
+            background:#f8fafc;
+        }
 
-/* BUTTON */
+        /* BUTTON */
 
-.btn-update{
-    background:linear-gradient(
-        135deg,
-        var(--accent),
-        var(--accent-light)
-    );
+        .btn-update{
+            background:linear-gradient(
+                135deg,
+                var(--accent),
+                var(--accent-light)
+            );
 
-    border:none;
+            border:none;
 
-    color:white;
+            color:white;
 
-    height:60px;
+            height:60px;
 
-    border-radius:18px;
+            border-radius:18px;
 
-    font-weight:700;
+            font-weight:700;
 
-    font-size:16px;
+            font-size:16px;
 
-    box-shadow:
-        0 12px 30px rgba(255,121,0,.35);
+            box-shadow:
+                0 12px 30px rgba(255,121,0,.35);
 
-    transition:.3s;
-}
+            transition:.3s;
+        }
 
-.btn-update:hover{
-    transform:translateY(-3px);
+        .btn-update:hover{
+            transform:translateY(-3px);
 
-    box-shadow:
-        0 20px 40px rgba(255,121,0,.4);
-}
+            box-shadow:
+                0 20px 40px rgba(255,121,0,.4);
+        }
 
-/* ALERTS */
+        /* ALERTS */
 
-.alert{
-    border:none;
+        .alert{
+            border:none;
 
-    border-radius:18px;
+            border-radius:18px;
 
-    padding:18px;
+            padding:18px;
 
-    font-weight:600;
+            font-weight:600;
 
-    backdrop-filter:blur(10px);
-}
+            backdrop-filter:blur(10px);
+        }
 
-.alert-success{
-    background:rgba(22,163,74,.12);
-    color:#166534;
-}
+        .alert-success{
+            background:rgba(22,163,74,.12);
+            color:#166534;
+        }
 
-.alert-danger{
-    background:rgba(220,38,38,.12);
-    color:#991b1b;
-}
+        .alert-danger{
+            background:rgba(220,38,38,.12);
+            color:#991b1b;
+        }
 
-/* USER INFO */
+        /* USER INFO */
 
-.info-box{
-    background:rgba(5,73,96,.05);
+        .info-box{
+            background:rgba(5,73,96,.05);
 
-    border-radius:18px;
+            border-radius:18px;
 
-    padding:18px;
+            padding:18px;
 
-    margin-bottom:25px;
-}
+            margin-bottom:25px;
+        }
 
-.info-title{
-    color:#6b7280;
-    font-size:13px;
-}
+        .info-title{
+            color:#6b7280;
+            font-size:13px;
+        }
 
-.info-value{
-    color:var(--primary);
-    font-weight:700;
-    font-size:20px;
-}
+        .info-value{
+            color:var(--primary);
+            font-weight:700;
+            font-size:20px;
+        }
 
-/* PASSWORD HINT */
+        /* PASSWORD HINT */
 
-.password-hint{
-    color:#6b7280;
-    font-size:13px;
-    margin-top:8px;
-}
+        .password-hint{
+            color:#6b7280;
+            font-size:13px;
+            margin-top:8px;
+        }
 
-/* PREMIUM SCROLLBAR */
+        /* PREMIUM SCROLLBAR */
 
-::-webkit-scrollbar{
-    width:10px;
-}
+        ::-webkit-scrollbar{
+            width:10px;
+        }
 
-::-webkit-scrollbar-thumb{
-    background:var(--primary-light);
-    border-radius:50px;
-}
+        ::-webkit-scrollbar-thumb{
+            background:var(--primary-light);
+            border-radius:50px;
+        }
 
-/* MOBILE */
+        /* MOBILE */
 
-@media(max-width:768px){
+        @media(max-width:768px){
 
-    .hero-title{
-        font-size:28px;
-    }
+            .hero-title{
+                font-size:28px;
+            }
 
-    .form-card{
-        padding:25px;
-    }
+            .form-card{
+                padding:25px;
+            }
 
-    .hero-section{
-        padding:25px;
-    }
-}
+            .hero-section{
+                padding:25px;
+            }
+        }
 
 </style>
 

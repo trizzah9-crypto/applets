@@ -184,7 +184,7 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
     <title>Customers</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
+<style>
         :root{
             --brand:#054960;
             --brand2:#0a5d78;
@@ -567,7 +567,7 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
             .summary-card{ min-height: 108px; }
             .mobile-compact .btn{ padding: .5rem .75rem; }
         }
-    </style>
+</style>
 </head>
 <body>
 <div class="container-fluid crm-shell px-3 px-lg-4">

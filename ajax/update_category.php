@@ -1,4 +1,3 @@
-
 <?php
 // ajax/update_category.php
 require_once __DIR__ . '/../db.php';

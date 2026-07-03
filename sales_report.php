@@ -21,7 +21,7 @@ $user_name = $_SESSION['user_name'] ?? ($_SESSION['admin'] ?? 'Cashier');
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <style>
+<style>
         :root {
             --brand-950: #033542;
             --brand-900: #054960;
@@ -533,7 +533,7 @@ $user_name = $_SESSION['user_name'] ?? ($_SESSION['admin'] ?? 'Cashier');
                 overflow: visible !important;
             }
         }
-    </style>
+</style>
 </head>
 <body>
 <div class="sales-page-shell">
