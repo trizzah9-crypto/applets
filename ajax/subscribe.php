@@ -1,8 +1,10 @@
 <?php
+
 header('Content-Type: application/json');
 session_start();
 
 require_once("../db.php"); // your PDO SQLite connection in $conn
+require_once("../config.php");
 
 // SECRET KEY
 $SECRET_KEY = "0700000000";  // change to your own secret key
@@ -89,13 +91,180 @@ if ($phone === $SECRET_KEY) {
 // ---------------------------------------
 // SECRET KEY DID NOT MATCH → GO TO PAYMENT
 // ---------------------------------------
+// ---------------------------------------
+// CREATE PESAPAL PAYMENT
+// ---------------------------------------
 
-echo json_encode([
-    'status' => 'pay',
-    'message' => 'Proceed to payment',
-    'plan' => $planKey,
-    'amount' => $plans[$planKey]['price'],
-    'phone' => $phone
-]);
+require_once("../config.php");
+
+try {
+
+    // Get logged in business
+    $stmt = $conn->prepare("
+        SELECT id,business_name,email
+        FROM businesses
+        WHERE owner_user_id=?
+        LIMIT 1
+    ");
+
+    $stmt->execute([$userId]);
+
+    $business = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if(!$business){
+        throw new Exception("Business not found.");
+    }
+
+    $merchant_reference = "SUB-" . uniqid();
+
+    // Save payment
+    $stmt = $conn->prepare("
+    INSERT INTO payments
+    (
+        business_id,
+        merchant_reference,
+        customer_name,
+        customer_email,
+        customer_phone,
+        amount,
+        currency,
+        status
+    )
+    VALUES
+    (
+        ?,?,?,?,?,?,?,
+        'PENDING'
+    )
+    ");
+
+    $stmt->execute([
+
+        $business['id'],
+
+        $merchant_reference,
+
+        $business['business_name'],
+
+        $business['email'],
+
+        $phone,
+
+        $plans[$planKey]['price'],
+
+        CURRENCY
+
+    ]);
+
+    // Get Token
+
+    $token = getPesapalToken();
+
+    $payload = [
+
+        "id"=>$merchant_reference,
+
+        "currency"=>CURRENCY,
+
+        "amount"=>$plans[$planKey]['price'],
+
+        "description"=>$plans[$planKey]['label']." Subscription",
+
+        "callback_url"=>CALLBACK_URL,
+
+        "notification_id"=>PESAPAL_IPN_ID,
+
+        "billing_address"=>[
+
+            "email_address"=>$business['email'],
+
+            "phone_number"=>$phone,
+
+            "country_code"=>"KE",
+
+            "first_name"=>$business['business_name'],
+
+            "last_name"=>""
+
+        ]
+
+    ];
+
+    $ch = curl_init(PESAPAL_BASE_URL."/api/Transactions/SubmitOrderRequest");
+
+    curl_setopt_array($ch,[
+
+        CURLOPT_RETURNTRANSFER=>true,
+
+        CURLOPT_POST=>true,
+
+        CURLOPT_HTTPHEADER=>[
+
+            "Authorization: Bearer ".$token,
+
+            "Content-Type: application/json"
+
+        ],
+
+        CURLOPT_POSTFIELDS=>json_encode($payload)
+
+    ]);
+
+    $response = curl_exec($ch);
+
+    if(curl_errno($ch)){
+        throw new Exception(curl_error($ch));
+    }
+
+    curl_close($ch);
+
+    $response = json_decode($response,true);
+
+    if(isset($response['order_tracking_id'])){
+
+        $stmt = $conn->prepare("
+            UPDATE payments
+            SET order_tracking_id=?
+            WHERE merchant_reference=?
+        ");
+
+        $stmt->execute([
+
+            $response['order_tracking_id'],
+
+            $merchant_reference
+
+        ]);
+
+        echo json_encode([
+
+            "status"=>"payment_required",
+
+            "redirect_url"=>$response['redirect_url']
+
+        ]);
+
+        exit;
+
+    }
+
+    echo json_encode([
+
+        "status"=>"error",
+
+        "message"=>$response
+
+    ]);
+
+} catch(Exception $e){
+
+    echo json_encode([
+
+        "status"=>"error",
+
+        "message"=>$e->getMessage()
+
+    ]);
+
+}
 
 exit;
