@@ -365,43 +365,74 @@ $current_page = basename($_SERVER['PHP_SELF']);
             padding:1rem;
             padding-top:78px;
         }
+  
+           .content{
+        padding-top: 65px;
+    }
 
-        .topbar{
-            padding:.8rem 1rem;
-            border-radius:18px;
-        }
+     #menuToggle{
+        min-height: 50px;
+        min-width: 14%;
+     }
 
-        .topbar-header{
-            gap:.6rem;
-        }
 
-        .b2b_head{
-            font-size:14px;
-            padding:10px 14px;
-            border-radius:14px;
-        }
+    .topbar{
+        margin-bottom: .5rem;
+        padding: .45rem .65rem;
+        border-radius: 14px;
+        min-height: 50px;
+        width: calc(100% - 62px);
+        margin-left: 62px;
+    }
 
-        .header-profile .nav-link{
-            padding:10px 12px !important;
-            font-size:13px;
-        }
+    .topbar-header{
+        align-items: center;
+        gap: .3rem;
+    }
 
-        .notification_dropdown .nav-link{
-            width:46px;
-            height:46px;
-        }
+    .b2b_head{
+        font-size: 10px;
+        padding: 6px 10px;
+        border-radius: 10px;
+        letter-spacing: .2px;
+        margin: 0;
+    }
 
-        .brand-box{
-            padding-top:.25rem;
-        }
+    .header-profile .nav-link{
+        padding: 6px 10px !important;
+        font-size: 11px;
+        border-radius: 10px;
+        min-height: 34px;
+    }
 
-        .brand-title{
-            font-size:.95rem;
-        }
+    .header-profile .nav-link i{
+        font-size: 14px;
+        margin-right: 4px;
+    }
 
-        .brand-subtitle{
-            font-size:.68rem;
-        }
+    .notification_dropdown .nav-link{
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+    }
+    .content{
+        padding-top: 15px !important;
+    }
+
+    .content-body{
+        margin-top: -100px !important;
+    }
+
+    .notification_dropdown i{
+        font-size: 14px;
+    }
+
+    .dropdown-menu{
+        min-width: 220px;
+        font-size: 12px;
+    }
+
+        
     }
 </style>
 
@@ -415,7 +446,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <div class="overlay" id="overlay"></div>
 
 <button class="btn btn-outline-light d-lg-none" id="menuToggle" type="button" aria-label="Open sidebar">
-    <i class="fas fa-bars"></i>
+    <i class="fas fa-bars text-white"></i>
 </button>
 
 <div class="app-shell">
@@ -438,6 +469,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </a>
             <a class="nav-link <?= $current_page=='pos.php' ? 'active' : '' ?>" href="pos.php">
                 <i class="fas fa-cash-register"></i><span>Make Sales</span>
+            </a>
+            <a class="nav-link <?= $current_page=='pending_orders.php' ? 'active' : '' ?>" href="pending_orders.php">
+                <i class="fas fa-hourglass-half"></i><span>Pending Orders</span>
             </a>
             <a class="nav-link <?= $current_page=='sales_report.php' ? 'active' : '' ?>" href="sales_report.php">
                 <i class="fas fa-file-invoice"></i><span>Sale Receipts</span>

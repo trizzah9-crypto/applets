@@ -1,6 +1,6 @@
 
 <?php
-// ajax/add_category.php
+// ajax/delete_category.php
 require_once __DIR__ . '/../db.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 
@@ -24,10 +24,10 @@ function getCurrentBusinessId(PDO $conn): int {
     return 0;
 }
 
-$name = trim($_POST['name'] ?? '');
+$id = (int) ($_POST['id'] ?? 0);
 
-if ($name === '') {
-    echo json_encode(['status' => 'error', 'message' => 'Category name is required.']);
+if ($id <= 0) {
+    echo json_encode(['status' => 'error', 'message' => 'Invalid category ID.']);
     exit;
 }
 
@@ -39,38 +39,52 @@ if ($businessId <= 0) {
 }
 
 try {
+
+    // Check if category is used by any products
     $check = $conn->prepare("
-        SELECT id
-        FROM categories
-        WHERE business_id = :business_id
-          AND LOWER(name) = LOWER(:name)
-        LIMIT 1
+        SELECT COUNT(*) as total
+        FROM products
+        WHERE category_id = :id
+          AND business_id = :business_id
     ");
+
     $check->execute([
-        ':business_id' => $businessId,
-        ':name' => $name
+        ':id' => $id,
+        ':business_id' => $businessId
     ]);
 
-    if ($check->fetch(PDO::FETCH_ASSOC)) {
-        echo json_encode(['status' => 'error', 'message' => 'Category already exists for this business.']);
+    $count = $check->fetch(PDO::FETCH_ASSOC);
+
+    if ($count['total'] > 0) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Category is being used by products and cannot be deleted.'
+        ]);
         exit;
     }
 
+    // Safe to delete
     $stmt = $conn->prepare("
-        INSERT INTO categories (name, business_id)
-        VALUES (:name, :business_id)
+        DELETE FROM categories
+        WHERE id = :id
+          AND business_id = :business_id
     ");
+
     $stmt->execute([
-        ':name' => $name,
+        ':id' => $id,
         ':business_id' => $businessId
     ]);
 
     echo json_encode([
-        'status' => 'ok',
-        'id' => $conn->lastInsertId(),
-        'name' => $name
+        'status' => 'ok'
+    ]);
+
+} catch (PDOException $e) {
+
+    echo json_encode([
+        'status' => 'error',
+        'message' => $e->getMessage()
     ]);
 } catch (PDOException $e) {
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
-}
- 
+} 

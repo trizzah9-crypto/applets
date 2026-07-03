@@ -27,7 +27,7 @@ if ($store_id > 0) {
     ");
     $stmt->execute([$business_id]);
 }
-
+$number = 1;
 $output = '';
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -56,7 +56,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
    $output .= "<tr class='product-row' data-barcode='".htmlspecialchars($row['barcode'], ENT_QUOTES)."'>";
 
-$output .= "<td>".htmlspecialchars($row['id'])."</td>";
+$output .= "<td>".$number++."</td>";
 $output .= "<td>".htmlspecialchars($row['name'])."</td>";
 $category = isset($row['category']) ? htmlspecialchars($row['category']) : '';
 $output .= "<td>$category</td>";

@@ -19,6 +19,10 @@ $store_id = isset($_SESSION['store_id']) ? (int)$_SESSION['store_id'] : 0;
 $barcode = trim($_POST['barcode'] ?? '');
 $name = trim($_POST['name'] ?? '');
 $category = trim($_POST['category'] ?? '');
+$category_id = !empty($_POST['category_id'])
+    ? (int)$_POST['category_id']
+    : null;
+
 $description = trim($_POST['description'] ?? '');
 $cost_price = floatval($_POST['cost_price'] ?? 0);
 $selling_price = floatval($_POST['net_selling_price'] ?? 0);
@@ -30,6 +34,8 @@ $add_stock = isset($_POST['add_stock']) ? floatval($_POST['add_stock']) : 0;
 $pack_size = isset($_POST['pack_size']) ? intval($_POST['pack_size']) : null;
 $pack_qty = isset($_POST['pack_qty']) ? floatval($_POST['pack_qty']) : 0;
 $add_packs = isset($_POST['add_packs']) ? floatval($_POST['add_packs']) : 0;
+
+ 
 
 // Validation
 if ($selling_price < $cost_price) {
@@ -119,6 +125,7 @@ $newStock = max(0, $newStock);
             unit = :unit,
             pack_size = :pack_size,
             category = :category,
+            category_id = :category_id,
             updated_at = :updated_at
         WHERE id = :id
     ");
@@ -133,6 +140,7 @@ $newStock = max(0, $newStock);
             ':unit' => $unit,
             ':pack_size' => $pack_size,
             ':category' => $category,
+            ':category_id' => $category_id,
             ':updated_at' => $now,
             ':id' => $product_id
         ]);
@@ -159,11 +167,11 @@ $final_stock_qty = $unit === 'pack'
        $ins = $conn->prepare("
                 INSERT INTO products
                     (business_id, store_id, name, description, barcode,
-                     cost_price, selling_price, stock_qty, unit, pack_size, category,
+                     cost_price, selling_price, stock_qty, unit, pack_size, category, category_id,
                      created_at, updated_at)
                 VALUES
                     (:business_id, :store_id, :name, :description, :barcode,
-                     :cost_price, :selling_price, :stock_qty, :unit, :pack_size, :category,
+                     :cost_price, :selling_price, :stock_qty, :unit, :pack_size, :category, :category_id,
                      :created_at, :updated_at)
             ");
 
@@ -180,6 +188,7 @@ $final_stock_qty = $unit === 'pack'
             ':unit' => $unit,
             ':pack_size' => $pack_size,
             ':category' => $category,
+            ':category_id' => $category_id,
             ':created_at' => $now,
             ':updated_at' => $now
         ]);

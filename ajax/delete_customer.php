@@ -1,17 +1,33 @@
 <?php
-include '../db.php';
-session_start();
-header("Content-Type: application/json");
+require("../db.php");
 
-if(!isset($_SESSION['business_id'])){
-    echo json_encode(['status'=>'error','message'=>'No business selected']); exit;
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
-$id = intval($_POST['id'] ?? 0);
-$business_id = $_SESSION['business_id'];
+header("Content-Type: application/json; charset=utf-8");
 
-if(!$id){ echo json_encode(['status'=>'error','message'=>'Invalid']); exit; }
+if (!isset($_SESSION['business_id'])) {
+    echo json_encode(['status' => 'error', 'message' => 'No business selected']);
+    exit;
+}
 
-$conn->query("DELETE FROM customers WHERE id=$id AND business_id=$business_id");
+$id = (int)($_POST['id'] ?? 0);
+$business_id = (int)$_SESSION['business_id'];
 
-echo json_encode(['status'=>'ok']);
+if (!$id) {
+    echo json_encode(['status' => 'error', 'message' => 'Invalid customer ID']);
+    exit;
+}
+
+try {
+    $stmt = $conn->prepare("DELETE FROM customers WHERE id = :id AND business_id = :business_id");
+    $stmt->execute([
+        'id' => $id,
+        'business_id' => $business_id
+    ]);
+
+    echo json_encode(['status' => 'ok']);
+} catch (Throwable $e) {
+    echo json_encode(['status' => 'error', 'message' => 'Delete failed: ' . $e->getMessage()]);
+}

@@ -14,31 +14,410 @@ include 'db.php';
 <head>
     <title>Products - Hardware POS</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        /* Style to visually disable select while keeping it enabled */
-        select.readonly {
-            pointer-events: none;
-            background-color: #e9ecef;
-            color: #6c757d;
-        }
-    </style>
+   <style>
+
+:root{
+    --primary:#054960;
+    --primary-light:#0a5d78;
+    --primary-bright:#0f7c9d;
+
+    --accent:#ff7900;
+    --accent-light:#ff9d3f;
+
+    --success:#10b981;
+    --danger:#ef4444;
+
+    --radius-xl:28px;
+    --radius-lg:22px;
+    --radius-md:18px;
+    --radius-sm:14px;
+
+    --glass:rgba(255,255,255,.78);
+    --glass-border:rgba(255,255,255,.45);
+
+    --shadow-lg:
+        0 20px 50px rgba(5,73,96,.12);
+
+    --shadow-md:
+        0 10px 30px rgba(5,73,96,.08);
+
+    --transition:.3s ease;
+}
+
+body{
+    background:
+        radial-gradient(circle at top left,#e9f8ff,#f5f9fc);
+
+    font-family:"Segoe UI",sans-serif;
+}
+
+/* PAGE TITLE */
+
+h2{
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--primary-light),
+            var(--primary-bright)
+        ) !important;
+
+    color:white !important;
+
+    border:none !important;
+
+    border-radius:var(--radius-xl) !important;
+
+    padding:28px !important;
+
+    box-shadow:var(--shadow-lg);
+
+    display:block !important;
+
+    width:fit-content;
+
+    min-width:420px;
+
+    margin:auto !important;
+
+    margin-bottom:40px !important;
+
+    font-size:30px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    text-transform:none !important;
+}
+
+/* MAIN FORM */
+
+#productForm{
+    background:var(--glass) !important;
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid var(--glass-border) !important;
+
+    border-radius:var(--radius-xl);
+
+    padding:35px !important;
+
+    box-shadow:var(--shadow-lg);
+}
+
+/* INPUTS */
+
+.form-control,
+.form-select{
+    border-radius:18px !important;
+
+    border:1px solid rgba(5,73,96,.12) !important;
+
+    height:52px;
+
+    background:rgba(255,255,255,.7);
+
+    transition:var(--transition);
+}
+
+.form-control:focus,
+.form-select:focus{
+    border-color:var(--primary-bright) !important;
+
+    box-shadow:
+        0 0 0 4px rgba(15,124,157,.15) !important;
+
+    background:white;
+}
+
+.form-control-sm,
+.form-select-sm{
+    height:48px;
+}
+
+/* LABELS */
+
+.form-label{
+    color:var(--primary);
+    font-weight:600;
+    margin-bottom:10px;
+}
+
+/* READONLY SELECT */
+
+select.readonly{
+    pointer-events:none;
+    background:#edf2f7 !important;
+    color:#6b7280;
+}
+
+/* BUTTONS */
+
+.btn{
+    border-radius:18px !important;
+    transition:var(--transition);
+    font-weight:600;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+.btn-primary{
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--primary-bright)
+        ) !important;
+
+    border:none !important;
+}
+
+.btn-success{
+    background:
+        linear-gradient(
+            135deg,
+            #10b981,
+            #34d399
+        ) !important;
+
+    border:none !important;
+}
+
+.btn-secondary{
+    border:none !important;
+}
+
+.btn-outline-primary{
+    border:2px solid var(--primary) !important;
+    color:var(--primary) !important;
+}
+
+.btn-outline-primary:hover{
+    background:var(--primary) !important;
+    color:white !important;
+}
+
+.btn-outline-success{
+    border:2px solid #10b981 !important;
+    color:#10b981 !important;
+}
+
+.btn-outline-success:hover{
+    background:#10b981 !important;
+    color:white !important;
+}
+
+/* SAVE BUTTON */
+
+button[type="submit"]{
+    border:none !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            var(--accent-light)
+        ) !important;
+
+    box-shadow:
+        0 10px 25px rgba(255,121,0,.25);
+}
+
+/* ALERTS */
+
+.alert{
+    border:none !important;
+
+    border-radius:18px !important;
+
+    backdrop-filter:blur(10px);
+
+    font-weight:600;
+}
+
+.alert-success{
+    background:rgba(16,185,129,.12);
+    color:#065f46;
+}
+
+.alert-danger{
+    background:rgba(239,68,68,.12);
+    color:#991b1b;
+}
+
+/* TABLES */
+
+.table{
+    background:var(--glass);
+
+    backdrop-filter:blur(20px);
+
+    border-radius:var(--radius-xl);
+
+    overflow:hidden;
+
+    box-shadow:var(--shadow-lg);
+}
+
+.table thead th{
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--primary-light)
+        );
+
+    color:white;
+
+    border:none;
+
+    padding:18px;
+
+    font-weight:600;
+}
+
+.table tbody td{
+    padding:16px;
+    vertical-align:middle;
+}
+
+.table tbody tr{
+    transition:var(--transition);
+}
+
+.table tbody tr:hover{
+    background:rgba(5,73,96,.04);
+    transform:translateY(-2px);
+}
+
+/* MODALS */
+
+.modal-content{
+    border:none !important;
+
+    border-radius:28px !important;
+
+    background:
+        rgba(255,255,255,.92);
+
+    backdrop-filter:blur(25px);
+
+    box-shadow:
+        0 25px 60px rgba(5,73,96,.18);
+}
+
+.modal-header{
+    border:none;
+
+    padding:25px 30px;
+}
+
+.modal-title{
+    color:var(--primary);
+    font-weight:700;
+}
+
+.modal-footer{
+    border:none;
+}
+
+/* CARDS */
+
+.card{
+    border:none !important;
+
+    border-radius:24px !important;
+
+    background:
+        rgba(255,255,255,.8);
+
+    backdrop-filter:blur(20px);
+
+    box-shadow:var(--shadow-md);
+}
+
+.card-header{
+    background:none !important;
+
+    border:none !important;
+
+    color:var(--primary);
+
+    font-weight:700;
+}
+
+/* SEARCH AREA */
+
+#productSearch,
+#categoryFilter{
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.04);
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar{
+    width:10px;
+}
+
+::-webkit-scrollbar-thumb{
+    background:var(--primary-light);
+    border-radius:50px;
+}
+/* Mobile table scrolling */
+.table-responsive-premium{
+    width:100%;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    border-radius:24px;
+}
+
+.table-responsive-premium::-webkit-scrollbar{
+    height:10px;
+}
+
+.table-responsive-premium::-webkit-scrollbar-thumb{
+    background:var(--primary-light);
+    border-radius:50px;
+}
+
+@media (max-width:768px){
+
+    #productTable{
+        min-width:1100px;
+    }
+
+}
+/* MOBILE */
+
+@media(max-width:768px){
+
+    h2{
+        min-width:auto;
+        width:100%;
+        font-size:24px;
+    }
+
+    #productForm{
+        padding:20px !important;
+    }
+
+    .table{
+        font-size:13px;
+    }
+
+}
+</style>
 </head>
 <body class="bg-light">
 
 <div class="container py-4">
     <h2 class="text-center mb-4 py-3 px-4 rounded shadow-sm" 
-        style="
-            background: rgba(0, 123, 255, 0.1); 
-            color: #004549ff; 
-            font-weight: 600; 
-            letter-spacing: 1px; 
-            text-transform: uppercase; 
-            border-left: 5px solid #025659ff;
-            display: inline-block;
-            margin-top: -40px;
-            margin-left: 50%;
-            transform: translateX(-50%);
-        ">
+        >
         Inventory.
     </h2>
 
@@ -78,6 +457,7 @@ include 'db.php';
           </div>
           <button type="submit" class="btn btn-primary">Add Supplier</button>
         </form>
+        <div class="table-responsive-premium">
         <table class="table table-bordered mt-4" id="suppliersTable">
     <thead>
         <tr>
@@ -90,6 +470,7 @@ include 'db.php';
     </thead>
     <tbody></tbody>
 </table>
+        </div>
 
       </div>
     </div>
@@ -122,6 +503,7 @@ include 'db.php';
     <div class="d-flex gap-2">
         <select name="category" id="categorySelect" class="form-select form-select-sm" required>
             <option value="">Select category</option>
+             <input type="hidden" name="category" id="categoryName">
         </select>
         <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">+</button>
     </div>
@@ -281,11 +663,11 @@ include 'db.php';
 
 </div>
 
-
+<div class="table-responsive-premium">
     <table class="table table-striped mt-4" id="productTable">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>#</th>
                 <th>Name</th>
                 <th>Category</th>
                 <th>Description</th>
@@ -305,89 +687,279 @@ include 'db.php';
         <tbody></tbody>
     </table>
 </div>
-
-<div class="modal fade" id="addCategoryModal" tabindex="-1">
+</div>
+ 
+<!-- Category Manager -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Add Category</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
+
       <div class="modal-body">
-        <input type="text" id="newCategoryName" class="form-control" placeholder="Category name">
+        <div id="categoryMsgBox" class="alert d-none" role="alert"></div>
+
+        <div class="mb-3">
+          <label class="form-label">Category Name</label>
+          <input type="text" id="newCategoryName" class="form-control" placeholder="Enter category name">
+        </div>
       </div>
+
       <div class="modal-footer">
-        <button class="btn btn-primary btn-sm" onclick="addCategory()">Save</button>
+        <button type="button" class="btn btn-primary btn-sm" id="saveCategoryBtn">Save Category</button>
       </div>
-    </div>
+  
+<div class="card mt-4 shadow-sm">
+  <div class="card-header fw-semibold">
+    Categories
+  </div>
+  <div class="card-body">
+    <div class="table-responsive-premium">
+    <table class="table table-bordered table-sm align-middle" id="categoriesTable">
+      <thead>
+        <tr>
+          <th style="width: 80px;">ID</th>
+          <th>Name</th>
+          <th style="width: 220px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="3" class="text-center">Loading categories...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   </div>
 </div>
+  </div>
+  </div>
+</div>
+
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 
+ 
 <script>
-    function loadCategories(selectedName = null) {
+$(document).ready(function () {
+    function getBusinessIdFromSession() {
+        // This stays on the backend in PHP.
+        // On the frontend we only load/save categories with AJAX.
+    }
+
+    function showCategoryMessage(text, type = 'success') {
+        const box = $('#categoryMsgBox');
+        box.removeClass('d-none alert-success alert-danger alert-warning');
+        box.addClass(type === 'success' ? 'alert-success' : (type === 'warning' ? 'alert-warning' : 'alert-danger'));
+        box.text(text);
+    }
+
+    function clearCategoryMessage() {
+        $('#categoryMsgBox').addClass('d-none').removeClass('alert-success alert-danger alert-warning').text('');
+    }
+
+    function loadCategories(selectedId = null) {
         $.getJSON('ajax/get_categories.php', function (data) {
             const select = $('#categorySelect');
+            const filter = $('#categoryFilter');
+
             select.html('<option value="">Select category</option>');
+            filter.html('<option value="">All Categories</option>');
+
+            if (!Array.isArray(data)) data = [];
 
             data.forEach(cat => {
-                const opt = $('<option>', {
-                    value: cat.name,
+                const opt1 = $('<option>', {
+                    value: cat.id,
                     text: cat.name
                 });
-                if (selectedName && selectedName === cat.name) {
-                    opt.prop('selected', true);
+
+                if (selectedId && String(selectedId) === String(cat.id)) {
+                    opt1.prop('selected', true);
                 }
-                select.append(opt);
+
+                select.append(opt1);
+
+                filter.append(
+                    $('<option>', {
+                        value: cat.name,
+                        text: cat.name
+                    })
+                );
+            });
+
+            // Keep hidden category text for old product save logic if needed
+            $('#categoryName').val($('#categorySelect option:selected').text() || '');
+        });
+    }
+
+    function loadCategoryTable() {
+        $.getJSON('ajax/get_categories.php', function (data) {
+            const tbody = $('#categoriesTable tbody');
+            tbody.empty();
+
+            if (!Array.isArray(data) || data.length === 0) {
+                tbody.append('<tr><td colspan="3" class="text-center">No categories found.</td></tr>');
+                return;
+            }
+
+            data.forEach(cat => {
+                const row = $(`
+                    <tr data-id="${cat.id}">
+                        <td class="cat-id">${cat.id}</td>
+                        <td>
+                            <input type="text" class="form-control form-control-sm cat-name" value="${escapeHtml(cat.name)}" readonly>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-primary edit-category-btn">Edit</button>
+                            <button type="button" class="btn btn-sm btn-success save-category-btn d-none">Save</button>
+                            <button type="button" class="btn btn-sm btn-secondary cancel-category-btn d-none">Cancel</button>
+                            <button type="button" class="btn btn-sm btn-outline-danger delete-category-btn">Delete</button>
+                        </td>
+                    </tr>
+                `);
+                tbody.append(row);
             });
         });
     }
-    loadCategories();
 
-    function addCategory() {
+    function escapeHtml(str) {
+        return String(str || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function resetCategoryRow($row, originalName) {
+        const input = $row.find('.cat-name');
+        input.val(originalName).prop('readonly', true);
+        $row.find('.edit-category-btn').removeClass('d-none');
+        $row.find('.delete-category-btn').removeClass('d-none');
+        $row.find('.save-category-btn, .cancel-category-btn').addClass('d-none');
+    }
+
+    // Load on page start
+    loadCategories();
+    loadCategoryTable();
+
+    // Keep hidden category name in sync
+    $(document).on('change', '#categorySelect', function () {
+        $('#categoryName').val($(this).find('option:selected').text() || '');
+    });
+
+    // Add category
+    $('#saveCategoryBtn').on('click', function () {
         const name = $('#newCategoryName').val().trim();
+
         if (!name) {
-            alert('Enter category name');
+            showCategoryMessage('Enter category name.', 'danger');
             return;
         }
 
         $.post('ajax/add_category.php', { name }, function (res) {
             if (res.status === 'ok') {
-                loadCategories(res.id); // auto select new category
+                showCategoryMessage('Category added successfully.', 'success');
                 $('#newCategoryName').val('');
-                bootstrap.Modal.getInstance(
-                    document.getElementById('addCategoryModal')
-                ).hide();
+                loadCategories(res.id);
+                loadCategoryTable();
+
+                setTimeout(() => {
+                    bootstrap.Modal.getInstance(document.getElementById('addCategoryModal')).hide();
+                    clearCategoryMessage();
+                }, 900);
             } else {
-                alert(res.message || 'Failed to add category');
+                showCategoryMessage(res.message || 'Failed to add category.', 'danger');
             }
-        }, 'json');
-    }
+        }, 'json').fail(function () {
+            showCategoryMessage('AJAX error while adding category.', 'danger');
+        });
+    });
 
-    function loadCategoryFilter() {
-            $.getJSON('ajax/get_categories.php', function (data) {
-                const filter = $('#categoryFilter');
-                filter.html('<option value="">All Categories</option>');
+    // Edit row
+    $(document).on('click', '.edit-category-btn', function () {
+        const row = $(this).closest('tr');
+        const input = row.find('.cat-name');
+        row.data('original-name', input.val());
 
-                data.forEach(cat => {
-                    filter.append(
-                        $('<option>', {
-                            value: cat.name,
-                            text: cat.name
-                        })
-                    );
-                });
-            });
+        input.prop('readonly', false).focus();
+        row.find('.edit-category-btn, .delete-category-btn').addClass('d-none');
+        row.find('.save-category-btn, .cancel-category-btn').removeClass('d-none');
+    });
+
+    // Cancel edit
+    $(document).on('click', '.cancel-category-btn', function () {
+        const row = $(this).closest('tr');
+        const originalName = row.data('original-name') || row.find('.cat-name').val();
+        resetCategoryRow(row, originalName);
+    });
+
+    // Save edit
+    $(document).on('click', '.save-category-btn', function () {
+        const row = $(this).closest('tr');
+        const id = row.data('id');
+        const name = row.find('.cat-name').val().trim();
+
+        if (!name) {
+            showCategoryMessage('Category name cannot be empty.', 'danger');
+            return;
         }
 
-        loadCategoryFilter();
+        $.post('ajax/update_category.php', { id, name }, function (res) {
+            if (res.status === 'ok') {
+                showCategoryMessage('Category updated successfully.', 'success');
+                loadCategories(res.id);
+                loadCategoryTable();
+            } else {
+                showCategoryMessage(res.message || 'Failed to update category.', 'danger');
+            }
+        }, 'json').fail(function () {
+            showCategoryMessage('AJAX error while updating category.', 'danger');
+        });
+    });
 
+    // Delete
+    $(document).on('click', '.delete-category-btn', function () {
+        const row = $(this).closest('tr');
+        const id = row.data('id');
+        const name = row.find('.cat-name').val();
 
+        if (!confirm(`Delete category "${name}"?`)) return;
+
+        $.post('ajax/delete_category.php', { id }, function (res) {
+            if (res.status === 'ok') {
+                showCategoryMessage('Category deleted successfully.', 'success');
+                loadCategories();
+                loadCategoryTable();
+            } else {
+                showCategoryMessage(res.message || 'Failed to delete category.', 'danger');
+            }
+        }, 'json').fail(function () {
+            showCategoryMessage('AJAX error while deleting category.', 'danger');
+        });
+    });
+
+    // Re-run loaders after modal opens if needed
+    $('#addCategoryModal').on('shown.bs.modal', function () {
+        clearCategoryMessage();
+        $('#newCategoryName').focus();
+    });
+
+    // IMPORTANT:
+    // Change your product category select to this:
+    // <select name="category_id" id="categorySelect" class="form-select form-select-sm" required></select>
+    // And add this hidden input near it:
+    // <input type="hidden" name="category" id="categoryName">
+});
 </script>
+ 
+
 
 <script>
 
@@ -464,6 +1036,12 @@ $(document).ready(function() {
 
     toggleStockInputs();
 
+            $('#categorySelect').on('change', function () {
+            const text = $(this).find('option:selected').text();
+
+            $('#categoryName').val(text);
+        });
+
     // Load products into table
     function loadProducts() {
         $.get('ajax/get_products.php', function(data) {
@@ -491,7 +1069,7 @@ $(document).ready(function() {
 
         $('#barcode').val(p.barcode);
         $('#name').val(p.name);
-        loadCategories(p.category);
+        loadCategories(p.category_id);
         $('#description').val(p.description || '');
         $('#cost_price').val(p.cost_price);
         $('#selling_price').val(p.selling_price);

@@ -6,8 +6,8 @@ $bid = $_SESSION['business_id'] ?? 0;
 $cat = $_GET['category'] ?? '';
 $search = $_GET['search'] ?? '';
 
-$sql = "SELECT id, name, selling_price 
-        FROM products 
+$sql = "SELECT id, name, selling_price, stock_qty
+        FROM products
         WHERE business_id = :bid";
 $params = ['bid' => $bid];
 

@@ -18,7 +18,7 @@ if (!$barcode) {
 }
 
 $stmt = $conn->prepare("
-    SELECT id, business_id, store_id, name, description, barcode, cost_price, selling_price, stock_qty, pack_size, unit, category, created_at, updated_at, pack_size
+    SELECT id, business_id, store_id, name, description, barcode, cost_price, selling_price, stock_qty, pack_size, unit, category, category_id, created_at, updated_at, pack_size
     FROM products 
     WHERE barcode = ? 
     AND business_id = ?

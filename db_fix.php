@@ -1,21 +1,10 @@
 <?php
-require_once __DIR__ . '/db.php'; // your PDO connection
+require 'db.php';
+
+$stmt = $conn->query("PRAGMA table_info(products)");
+
+$columns = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 echo "<pre>";
-
-try {
-    // add created_at column with default
-    $sql = "
-        ALTER TABLE businesses
-        ADD COLUMN created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-    ";
-
-    $conn->exec($sql);
-
-    echo "✅ created_at column added successfully\n";
-
-} catch (PDOException $e) {
-    echo "❌ Error: " . $e->getMessage() . "\n";
-}
-
+print_r($columns);
 echo "</pre>";

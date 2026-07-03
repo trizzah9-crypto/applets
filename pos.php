@@ -107,6 +107,11 @@ require 'db.php'; // assuming $conn is a PDO instance
     font-size: 22px;
     font-weight: 800;
 }
+.out-of-stock{
+    opacity:0.5;
+    filter:grayscale(100%);
+    cursor:not-allowed;
+}
 
 @media (max-width: 768px) {
 
@@ -131,7 +136,7 @@ require 'db.php'; // assuming $conn is a PDO instance
     align-items:center;
     background:#fff;
     box-shadow:0 -2px 12px rgba(0,0,0,.12);
-    z-index:10000;
+    z-index:1000;
 }
 
 .nav-btn{
@@ -485,43 +490,54 @@ $('#applyVat').on('change', function(){
     getActiveCart().applyVat = this.checked;
     updateTotalWithDiscount();
     updateCashChange();
+      saveDraftOrder();
 });
 
 </script>
 
-<script>
+<script> 
 let carts = {};
 let activeCartId = 1;
 let cartCounter = 1;
 
-// Initialize first cart
+// First order/cart
 carts[1] = {
     items: {},
     discount: 0,
-    applyVat: true
+    applyVat: true,
+    draftId: 0,
+    orderName: 'Order 1'
 };
 
 function getActiveCart() {
     return carts[activeCartId];
 }
 
+function getCartTotal(cart) {
+    let total = 0;
+    for (let id in cart.items) {
+        total += (parseFloat(cart.items[id].qty) || 0) * (parseFloat(cart.items[id].selling_price) || 0);
+    }
+    return total;
+}
+
 function refreshCartSelector() {
     let html = '';
     for (let id in carts) {
-        html += `<option value="${id}">Cart ${id}</option>`;
+        let cart = carts[id];
+        let total = getCartTotal(cart);
+        html += `<option value="${id}">
+            ${cart.orderName || 'Order ' + id} - KES ${total.toFixed(2)}
+        </option>`;
     }
     $('#cartSelector').html(html).val(activeCartId);
 }
+
 refreshCartSelector();
 
 $('#cartSelector').on('change', function () {
-    // Save current cart state
-    carts[activeCartId].discount = parseFloat($('#discountInput').val()) || 0;
-    carts[activeCartId].applyVat = $('#applyVat').is(':checked');
+    activeCartId = parseInt($(this).val());
 
-    activeCartId = $(this).val();
-
-    // Load new cart state
     $('#discountInput').val(carts[activeCartId].discount);
     $('#applyVat').prop('checked', carts[activeCartId].applyVat);
 
@@ -530,16 +546,19 @@ $('#cartSelector').on('change', function () {
 
 $('#newCartBtn').click(function () {
     cartCounter++;
+
     carts[cartCounter] = {
         items: {},
         discount: 0,
-        applyVat: true
+        applyVat: true,
+        draftId: 0,
+        orderName: 'Order ' + cartCounter
     };
+
     activeCartId = cartCounter;
     refreshCartSelector();
     renderCart();
 });
-
 
 const QTY_STEP = 1;  // Fractional step for quantity (quarter)
 
@@ -597,6 +616,7 @@ function addToCart(product){
         cartItems[product.id].qty += QTY_STEP;
     }
     renderCart();
+    saveDraftOrder();
 }
 
 function renderCart(){
@@ -639,7 +659,31 @@ function calculateTotal(){
     return parseFloat(total.toFixed(2));
 }
 
+ function saveDraftOrder() {
+    let cart = getActiveCart();
 
+    if (Object.keys(cart.items).length === 0) {
+        return;
+    }
+
+    $.post('ajax/save_draft_order.php', {
+        draft_id: cart.draftId,
+        order_name: cart.orderName,
+        cart: JSON.stringify(cart.items),
+        discount: cart.discount,
+        apply_vat: cart.applyVat ? 1 : 0
+    }, function (res) {
+        if (res.status === 'ok') {
+            cart.draftId = parseInt(res.draft_id);
+            cart.orderName = res.order_name || cart.orderName;
+
+            refreshCartSelector();
+            console.log('Draft saved for cart', activeCartId, 'Draft ID:', cart.draftId);
+        } else {
+            console.log(res.message);
+        }
+    }, 'json');
+}
 
 
 function updateCashChange(){
@@ -664,6 +708,7 @@ $('#discountInput').on('input', function(){
     getActiveCart().discount = parseFloat(this.value) || 0;
     updateTotalWithDiscount();
     updateCashChange();
+    saveDraftOrder();
 });
 
 // --- Update Quantity by fractional step ---
@@ -671,6 +716,7 @@ $(document).on('click', '.increase', function(){
     let id = $(this).data('id');
     getActiveCart().items[id].qty += QTY_STEP;
     renderCart();
+    saveDraftOrder();
 });
 
 
@@ -685,6 +731,7 @@ $(document).on('click', '.decrease', function(){
         delete items[id];
     }
     renderCart();
+    saveDraftOrder();
 });
 
 // --- Handle manual quantity input changes ---
@@ -724,6 +771,7 @@ $(document).on('blur', 'input[type=number][data-id]', function(){
         delete items[id];
     }
     renderCart();
+    saveDraftOrder();
 
 
 });
@@ -734,6 +782,7 @@ $(document).on('blur', 'input[type=number][data-id]', function(){
 $(document).on('click', '.delete-item', function(){
     delete getActiveCart().items[$(this).data('id')];
     renderCart();
+    saveDraftOrder();
 });
 
 
@@ -742,6 +791,7 @@ $('#clearCartBtn').click(function(){
     if(confirm('Clear cart?')){
         getActiveCart().items = {};
         renderCart();
+        saveDraftOrder();
     }
 });
 
@@ -811,6 +861,7 @@ $('#confirmPayment').click(function(){
 
     // Prepare payload
     let payload = {
+  draft_id: getActiveCart().draftId,
   cart: JSON.stringify(getActiveCart().items),
   payment_method: method,
   customer_name: customer,
@@ -839,6 +890,16 @@ $('#discountInput').val(0);
 $('#applyVat').prop('checked', true);
 
 renderCart();
+carts[activeCartId].draftId = 0;
+carts[activeCartId].items = {};
+carts[activeCartId].discount = 0;
+carts[activeCartId].applyVat = true;
+
+$('#discountInput').val(0);
+$('#applyVat').prop('checked', true);
+
+renderCart();
+window.history.replaceState({}, document.title, "pos.php");
         paymentModal.hide();
     } else {
         $('#paymentMsg').text(res.message || 'Failed to save sale');
@@ -885,18 +946,25 @@ function loadTiles() {
 
         products.forEach(p => {
             let qty = cartItems[p.id]?.qty ?? 0;
+            let outOfStock = parseFloat(p.stock_qty) <= 0;
 
             html += `
             <div class="col-6 col-md-4 col-lg-3">
-                <div class="product-tile"
-                     data-id="${p.id}"
-                     data-name="${p.name}"
-                     data-price="${p.selling_price}">
-                     
-                     ${qty > 0 ? `<div class="product-qty">${qty}</div>` : ''}
+                <div class="product-tile ${outOfStock ? 'out-of-stock' : ''}"
+                    data-id="${p.id}"
+                    data-name="${p.name}"
+                    data-price="${p.selling_price}"
+                    data-stock="${p.stock_qty}">
 
-                     <div class="product-name">${p.name}</div>
-                     <div class="product-price">KES ${parseFloat(p.selling_price).toFixed(2)}</div>
+                    ${qty > 0 ? `<div class="product-qty">${qty}</div>` : ''}
+
+                    ${outOfStock
+                        ? `<div class="product-qty bg-danger">OUT</div>`
+                        : `<div class="product-qty bg-success">${p.stock_qty}</div>`
+                    }
+
+                    <div class="product-name">${p.name}</div>
+                    <div class="product-price">KES ${parseFloat(p.selling_price).toFixed(2)}</div>
                 </div>
             </div>`;
         });
@@ -965,6 +1033,38 @@ if (window.innerWidth <= 768) {
 }
 </script>
 
+<script>
+    // Load draft order when coming from Pending Orders page
+$(function () {
+    const params = new URLSearchParams(window.location.search);
+    const draftId = params.get('draft_id');
+
+    if (draftId) {
+        $.getJSON('ajax/get_draft_order.php', { draft_id: draftId }, function(res){
+            if(res.status !== 'ok'){
+                alert(res.message || 'Failed to load draft order');
+                return;
+            }
+
+            let draft = res.draft;
+
+            currentDraftId = parseInt(draft.id);
+
+            // Use the current active cart
+            getActiveCart().items = draft.cart_items || {};
+            getActiveCart().discount = parseFloat(draft.discount) || 0;
+            getActiveCart().applyVat = parseInt(draft.apply_vat) === 1;
+
+            $('#discountInput').val(getActiveCart().discount);
+            $('#applyVat').prop('checked', getActiveCart().applyVat);
+
+            renderCart();
+            updateTotalWithDiscount();
+            updateCashChange();
+        });
+    }
+});
+</script>
 
 </body>
 </html>

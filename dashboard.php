@@ -717,6 +717,8 @@ $orderGrowthDisplay    = $orderGrowth === null ? '—' : number_format(abs($orde
         animation: wave 2s infinite;
     }
 
+    
+
     @keyframes wave {
         0%,100% { transform: rotate(0deg); }
         10% { transform: rotate(14deg); }
@@ -758,6 +760,45 @@ $orderGrowthDisplay    = $orderGrowth === null ? '—' : number_format(abs($orde
         box-shadow:0 8px 20px rgba(255,121,0,.25);
     }
 
+    .dashboard-filter-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+            gap: 10px;
+        }
+
+       .dashboard-range-note{
+            font-size: 12px;
+            color: #7b8794;
+            background: rgba(5,73,96,.05);
+            border: 1px solid rgba(5,73,96,.08);
+            border-radius: 999px;
+            padding: 6px 14px;
+            backdrop-filter: blur(10px);
+        }
+            .dashboard-range-wrapper{
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .dashboard-pillgroup{
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .dashboard-range-note{
+            font-size: 12px;
+            color: #6c757d;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+        }
+
     @media (max-width: 991px) {
         .dashboard-hero {
             flex-direction: column;
@@ -774,48 +815,377 @@ $orderGrowthDisplay    = $orderGrowth === null ? '—' : number_format(abs($orde
         }
     }
 
-    @media (max-width: 767px) {
-        .premium-dashboard {
-            padding-bottom: 12px;
+   @media (max-width:768px){
+
+    /* =========================
+       GLOBAL MOBILE DENSITY
+    ==========================*/
+
+    html,
+    body{
+        overflow-x:hidden;
+    }
+
+    .container,
+    .container-fluid,
+    .premium-dashboard{
+        width:100% !important;
+        max-width:100% !important;
+        padding-left:10px !important;
+        padding-right:10px !important;
+        margin-left:0 !important;
+        margin-right:0 !important;
+    }
+
+    .row{
+        margin-left:-5px !important;
+        margin-right:-5px !important;
+    }
+
+    .row > *{
+        padding-left:5px !important;
+        padding-right:5px !important;
+    }
+
+    .mb-4{
+        margin-bottom:10px !important;
+    }
+
+    .premium-dashboard{
+        padding-bottom:8px !important;
+    }
+
+
+    /* =========================
+       HERO SECTION
+    ==========================*/
+
+    .dashboard-hero{
+        padding:16px !important;
+        border-radius:22px !important;
+        gap:14px !important;
+        margin-bottom:12px !important;
+        min-height:auto;
+        box-shadow:
+            0 10px 35px rgba(0,0,0,.10),
+            inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    .hero-copy{
+        width:100%;
+    }
+
+    .hero-copy h1{
+        font-size:1.15rem !important;
+        line-height:1.3;
+        margin-bottom:6px !important;
+    }
+
+    .hero-copy p{
+        font-size:.82rem !important;
+        margin-top:6px !important;
+        line-height:1.45;
+    }
+
+    .hero-pill-row{
+        margin-top:10px !important;
+        gap:6px !important;
+    }
+
+    .hero-pill{
+        width:auto !important;
+        flex:1 1 calc(50% - 3px);
+        justify-content:center;
+        padding:8px 10px !important;
+        font-size:.72rem !important;
+        border-radius:14px !important;
+        min-height:38px;
+        backdrop-filter:blur(18px);
+    }
+
+    .hero-badge{
+        width:100%;
+        min-width:unset !important;
+        padding:12px !important;
+        border-radius:18px !important;
+    }
+
+    .hero-badge .big{
+        font-size:1.3rem !important;
+    }
+
+    .hero-badge .small{
+        font-size:.75rem !important;
+    }
+
+
+    /* =========================
+       FILTERS
+    ==========================*/
+
+    .filter-panel{
+        padding:12px !important;
+        border-radius:20px !important;
+        margin-bottom:12px !important;
+    }
+
+    .filter-panel form{
+        gap:10px !important;
+    }
+
+    .filter-input{
+        height:42px !important;
+        padding:8px 12px !important;
+        font-size:.86rem !important;
+    }
+
+    .filter-label{
+        margin-bottom:4px !important;
+        font-size:.74rem !important;
+    }
+
+    .filter-btn{
+        width:100%;
+        height:44px !important;
+        border-radius:14px !important;
+        font-size:.88rem !important;
+    }
+
+    .dashboard-range-wrapper{
+        width:100%;
+        margin-left:0 !important;
+        align-items:center !important;
+    }
+
+    .dashboard-pillgroup{
+        width:100%;
+        display:grid !important;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px !important;
+    }
+
+    .dashboard-pill{
+        width:100%;
+        padding:10px 8px !important;
+        font-size:.78rem !important;
+    }
+
+    .dashboard-range-note{
+        margin-top:4px;
+        font-size:.72rem !important;
+    }
+
+
+    /* =========================
+       STATISTICS GRID
+    ==========================*/
+
+    .col-xl-3.col-lg-6.col-md-6{
+        width:50% !important;
+        flex:0 0 50% !important;
+        max-width:50% !important;
+    }
+
+    .stat-card{
+          min-height:118px !important;
+        height:100%;
+        border-radius:20px !important;
+        box-shadow:
+            0 8px 25px rgba(14,37,62,.10),
+            inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    .stat-card .card-body{
+         padding:10px !important;
+        display:flex;
+        flex-direction:column;
+        justify-content:space-between;
+        height:100%;
+    }
+
+    .stat-label{
+         font-size:.62rem !important;
+          margin-top:4px !important;
+    }
+
+    .stat-value{
+        font-size:1rem !important;
+        line-height:1.15 !important;
+        word-break:break-word;
+    }
+
+    .stat-sub{
+        margin-top:8px !important;
+        font-size:.68rem !important;
+        line-height:1.35;
+    }
+
+    .stat-icon{
+        right:12px !important;
+        top:12px !important;
+          font-size:1.5rem !important;
+        opacity:.14;
+    }
+
+
+    /* =========================
+       PANELS
+    ==========================*/
+
+    .panel-card{
+        border-radius:20px !important;
+        overflow:hidden;
+        background:rgba(255,255,255,.84);
+        backdrop-filter:blur(18px);
+    }
+
+    .panel-head{
+        padding:12px 14px !important;
+        gap:10px !important;
+    }
+
+    .panel-head h5{
+        font-size:.88rem !important;
+    }
+
+    .panel-head small{
+        font-size:.7rem !important;
+    }
+
+    .panel-body{
+        padding:12px !important;
+    }
+
+    .badge-soft{
+        font-size:.68rem !important;
+        padding:6px 10px !important;
+    }
+
+
+    /* =========================
+       CHARTS
+    ==========================*/
+
+    .chart-box{
+        height:250px !important;
+    }
+
+    .chart-box.tall{
+        height:280px !important;
+    }
+
+    canvas{
+        max-width:100% !important;
+    }
+
+
+    /* =========================
+       KPI BLOCKS
+    ==========================*/
+
+    .kpi-list{
+        gap:8px !important;
+    }
+
+    .kpi-item{
+        padding:10px 12px !important;
+        border-radius:14px !important;
+    }
+
+    .kpi-item span{
+        font-size:.75rem !important;
+    }
+
+    .kpi-item strong{
+        font-size:.82rem !important;
+    }
+
+
+    /* =========================
+       TABLES
+    ==========================*/
+
+    .table-responsive{
+        margin:0 -4px;
+        border-radius:16px;
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+    }
+
+    .table-modern{
+        min-width:560px;
+    }
+
+    .table-modern thead th{
+        font-size:.68rem !important;
+        padding:10px 8px !important;
+        white-space:nowrap;
+    }
+
+    .table-modern tbody td{
+        font-size:.74rem !important;
+        padding:10px 8px !important;
+        white-space:nowrap;
+    }
+
+
+    /* =========================
+       BUTTONS
+    ==========================*/
+
+    .btn,
+    .btn-lg{
+        min-height:44px;
+        font-size:.85rem !important;
+        border-radius:14px !important;
+    }
+
+    .btn-lg{
+        width:100%;
+    }
+
+
+    /* =========================
+       TYPOGRAPHY
+    ==========================*/
+
+    .section-title{
+        margin-bottom:8px !important;
+    }
+
+    .section-title h4{
+        font-size:.9rem !important;
+    }
+
+    .section-title p,
+    .subtle-note{
+        font-size:.74rem !important;
+    }
+
+
+    /* =========================
+       SAFETY FOR SMALL DEVICES
+    ==========================*/
+
+    @media (max-width:420px){
+
+        .stat-value{
+            font-size:.92rem !important;
         }
 
-        .dashboard-hero {
-            padding: 22px 18px;
-            border-radius: 22px;
+        .stat-sub{
+            font-size:.64rem !important;
         }
 
-        .filter-panel {
-            padding: 14px;
+        .hero-pill{
+            flex:1 1 100%;
         }
 
-        .filter-panel form {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .filter-input {
-            min-width: 100%;
-        }
-
-        .panel-head,
-        .panel-body {
-            padding-left: 16px;
-            padding-right: 16px;
-        }
-
-        .stat-card {
-            min-height: 150px;
-        }
-
-        .hero-pill-row {
-            gap: 8px;
-        }
-
-        .hero-pill {
-            width: 100%;
-            justify-content: center;
+        .hero-copy h1{
+            font-size:1rem !important;
         }
     }
+}
 </style>
 
 <div class="premium-dashboard">
@@ -847,7 +1217,7 @@ $orderGrowthDisplay    = $orderGrowth === null ? '—' : number_format(abs($orde
     </div>
 
     <?php if ($subscriptionStatus !== 'Active'): ?>
-        <div class="alert alert-warning border-0 shadow-sm" style="border-radius: 18px;">
+        <div class="alert alert-warning border-0 shadow-sm" style="border-radius: 18px; color: #054960;">
             <strong>Subscription status:</strong>
             <?= htmlspecialchars($subscriptionStatus) ?>
             <?= $daysLeft !== null ? ' • ' . abs($daysLeft) . ' day(s)' : '' ?>.
@@ -857,23 +1227,6 @@ $orderGrowthDisplay    = $orderGrowth === null ? '—' : number_format(abs($orde
     <div class="filter-panel">
  
         <form method="get" action="" id="dashboardFilterForm">
-                   <div class="dashboard-pillgroup" id="dashboardQuickRanges">
-                        <button type="button" class="dashboard-pill <?= $rangeDays == 1 ? 'active' : '' ?>" data-days="0">
-                            Today
-                        </button>
-
-                        <button type="button" class="dashboard-pill <?= $rangeDays == 7 ? 'active' : '' ?>" data-days="6">
-                            7 Days
-                        </button>
-
-                        <button type="button" class="dashboard-pill <?= $rangeDays == 30 ? 'active' : '' ?>" data-days="29">
-                            30 Days
-                        </button>
-
-                        <button type="button" class="dashboard-pill <?= $rangeDays == 90 ? 'active' : '' ?>" data-days="89">
-                            90 Days
-                        </button>
-                    </div>
             <div>
                 <label class="filter-label" for="startDate">Start date</label>
                 <input type="date" id="startDate" name="startDate" value="<?= htmlspecialchars($startDate) ?>" class="form-control filter-input">
@@ -890,8 +1243,29 @@ $orderGrowthDisplay    = $orderGrowth === null ? '—' : number_format(abs($orde
                 </button>
             </div>
 
-            <div class="ml-auto subtle-note">
-                Showing <?= (int)$rangeDays ?> day<?= $rangeDays === 1 ? '' : 's' ?> of performance data
+            <div class="dashboard-range-wrapper">
+                <div class="dashboard-pillgroup" id="dashboardQuickRanges"> 
+                    <div class="dashboard-range-note">
+                    Showing <?= (int)$rangeDays ?> day<?= $rangeDays === 1 ? '' : 's' ?> of performance data
+                </div>
+                    <button type="button" class="dashboard-pill <?= $rangeDays == 1 ? 'active' : '' ?>" data-days="0">
+                        Today
+                    </button>
+
+                    <button type="button" class="dashboard-pill <?= $rangeDays == 7 ? 'active' : '' ?>" data-days="6">
+                        7 Days
+                    </button>
+
+                    <button type="button" class="dashboard-pill <?= $rangeDays == 30 ? 'active' : '' ?>" data-days="29">
+                        30 Days
+                    </button>
+
+                    <button type="button" class="dashboard-pill <?= $rangeDays == 90 ? 'active' : '' ?>" data-days="89">
+                        90 Days
+                    </button>
+                </div>
+
+               
             </div>
         </form>
     </div>

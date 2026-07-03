@@ -10,26 +10,46 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $uid = (int) $_SESSION['user_id'];
-$list = [];
 
-// OWNED BUSINESSES
-$q = $conn->prepare("SELECT id, name, 'owner' AS role FROM businesses WHERE owner_user_id = :uid");
-$q->execute([':uid' => $uid]);
-$list = $q->fetchAll(PDO::FETCH_ASSOC);
+try {
+    // Owned businesses
+    $q = $conn->prepare("
+        SELECT id, name, receipt_logo, business_phone, 'owner' AS role
+        FROM businesses
+        WHERE owner_user_id = :uid
+    ");
+    $q->execute([':uid' => $uid]);
+    $list = $q->fetchAll(PDO::FETCH_ASSOC);
 
-// BUSINESSES VIA PIVOT TABLE
-$q2 = $conn->prepare("SELECT b.id, b.name, bu.role FROM businesses b JOIN business_user bu ON bu.business_id = b.id WHERE bu.user_id = :uid");
-$q2->execute([':uid' => $uid]);
-$list2 = $q2->fetchAll(PDO::FETCH_ASSOC);
+    // Businesses via pivot table
+    $q2 = $conn->prepare("
+        SELECT b.id, b.name, b.receipt_logo, b.business_phone, bu.role
+        FROM businesses b
+        JOIN business_user bu ON bu.business_id = b.id
+        WHERE bu.user_id = :uid
+    ");
+    $q2->execute([':uid' => $uid]);
+    $list2 = $q2->fetchAll(PDO::FETCH_ASSOC);
 
-// Merge and dedupe by 'id'
-$seen = [];
-$out = [];
+    // Merge and dedupe
+    $seen = [];
+    $out = [];
 
-foreach (array_merge($list, $list2) as $b) {
-    if (isset($seen[$b['id']])) continue;
-    $seen[$b['id']] = true;
-    $out[] = $b;
+    foreach (array_merge($list, $list2) as $b) {
+        $id = (int) $b['id'];
+        if (isset($seen[$id])) continue;
+
+        $seen[$id] = true;
+        $out[] = [
+            'id' => $id,
+            'name' => $b['name'] ?? '',
+            'receipt_logo' => $b['receipt_logo'] ?? '',
+            'business_phone' => $b['business_phone'] ?? '',
+            'role' => $b['role'] ?? 'member'
+        ];
+    }
+
+    echo json_encode(['status' => 'ok', 'businesses' => $out]);
+} catch (Throwable $e) {
+    echo json_encode(['status' => 'error', 'message' => 'Server error']);
 }
-
-echo json_encode(['status' => 'ok', 'businesses' => $out]);

@@ -20,13 +20,57 @@ if (!$name) {
     exit;
 }
 
-try {
-    $stmt = $conn->prepare(
-        "INSERT INTO businesses (owner_user_id, name, description, created_at)
-         VALUES (?, ?, ?, ?)"
-    );
-    $stmt->execute([$_SESSION['user_id'], $name, $description, $created_at]);
+$receipt_logo = null;
 
+if (isset($_FILES['receipt_logo']) && $_FILES['receipt_logo']['error'] == 0) {
+
+    $uploadDir = __DIR__ . '/../uploads/';
+
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
+
+    $extension = strtolower(pathinfo($_FILES['receipt_logo']['name'], PATHINFO_EXTENSION));
+
+    $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+
+    if (!in_array($extension, $allowed)) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Invalid image format'
+        ]);
+        exit;
+    }
+
+    $filename = 'logo_' . $_SESSION['user_id'] . '_' . time() . '.' . $extension;
+
+    $destination = $uploadDir . $filename;
+
+    if (move_uploaded_file($_FILES['receipt_logo']['tmp_name'], $destination)) {
+        $receipt_logo = 'uploads/' . $filename;
+    }
+}
+
+try {
+$stmt = $conn->prepare(
+    "INSERT INTO businesses
+    (
+        owner_user_id,
+        name,
+        description,
+        receipt_logo,
+        created_at
+    )
+    VALUES (?, ?, ?, ?, ?)"
+);
+
+$stmt->execute([
+    $_SESSION['user_id'],
+    $name,
+    $description,
+    $receipt_logo,
+    $created_at
+]);
     $business_id = $conn->lastInsertId();
 
     // add pivot row marking owner role

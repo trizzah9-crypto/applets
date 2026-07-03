@@ -1,6 +1,6 @@
 
 <?php
-// ajax/add_category.php
+// ajax/update_category.php
 require_once __DIR__ . '/../db.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 
@@ -24,10 +24,11 @@ function getCurrentBusinessId(PDO $conn): int {
     return 0;
 }
 
+$id = (int) ($_POST['id'] ?? 0);
 $name = trim($_POST['name'] ?? '');
 
-if ($name === '') {
-    echo json_encode(['status' => 'error', 'message' => 'Category name is required.']);
+if ($id <= 0 || $name === '') {
+    echo json_encode(['status' => 'error', 'message' => 'Invalid category data.']);
     exit;
 }
 
@@ -44,33 +45,47 @@ try {
         FROM categories
         WHERE business_id = :business_id
           AND LOWER(name) = LOWER(:name)
+          AND id != :id
         LIMIT 1
     ");
     $check->execute([
         ':business_id' => $businessId,
-        ':name' => $name
+        ':name' => $name,
+        ':id' => $id
     ]);
 
     if ($check->fetch(PDO::FETCH_ASSOC)) {
-        echo json_encode(['status' => 'error', 'message' => 'Category already exists for this business.']);
+        echo json_encode(['status' => 'error', 'message' => 'Another category with that name already exists.']);
         exit;
     }
 
     $stmt = $conn->prepare("
-        INSERT INTO categories (name, business_id)
-        VALUES (:name, :business_id)
+        UPDATE categories
+        SET name = :name
+        WHERE id = :id
+          AND business_id = :business_id
     ");
     $stmt->execute([
         ':name' => $name,
+        ':id' => $id,
         ':business_id' => $businessId
     ]);
 
-    echo json_encode([
-        'status' => 'ok',
-        'id' => $conn->lastInsertId(),
-        'name' => $name
-    ]);
+    echo json_encode(['status' => 'ok', 'id' => $id]);
 } catch (PDOException $e) {
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
 }
  
+
+$stmt = $conn->prepare("
+    UPDATE products
+    SET category = :name
+    WHERE category_id = :category_id
+      AND business_id = :business_id
+");
+
+$stmt->execute([
+    ':name' => $name,
+    ':category_id' => $id,
+    ':business_id' => $businessId
+]);

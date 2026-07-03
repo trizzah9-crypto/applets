@@ -197,7 +197,7 @@ require "permissions.php";
 
         <div id="msg"></div>
 
-        <form id="bizForm">
+        <form id="bizForm" enctype="multipart/form-data">
             <div class="mb-3">
                 <label class="form-label" >Business Name</label>
                 <input type="text" id="name" name="name" class="form-control"
@@ -214,6 +214,21 @@ require "permissions.php";
                 <label class="form-label">Description (optional)</label>
                 <textarea id="description" name="description" class="form-control" rows="2"
                           placeholder="Short description..."></textarea>
+            </div>
+
+
+             <div class="mb-3">
+                <label class="form-label">Business Logo</label>
+                <input
+                    type="file"
+                    id="receipt_logo"
+                    name="receipt_logo"
+                    class="form-control"
+                    accept="image/png,image/jpeg,image/jpg,image/webp"
+                >
+                <small class="text-muted">
+                    Accepted formats: JPG, PNG, WEBP
+                </small>
             </div>
 
             <button type="submit" class="btn btn-primary">Create Business</button>
@@ -245,18 +260,35 @@ function showMessage(text, type="success") {
     setTimeout(() => box.fadeOut(300), 2500);
 }
 
+
 $("#bizForm").on("submit", function(e) {
     e.preventDefault();
 
-    $.post("ajax/create_business.php", $(this).serialize(), function(res) {
-        if (res.status === "ok") {
-            showMessage("Business created successfully!", "success");
-            setTimeout(() => window.location.href = "business_select.php", 800);
-        } else {
-            showMessage(res.message || "Failed to create business", "danger");
+    let formData = new FormData(this);
+
+    $.ajax({
+        url: "ajax/create_business.php",
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "json",
+
+        success: function(res) {
+            if (res.status === "ok") {
+                showMessage("Business created successfully!", "success");
+
+                setTimeout(() => {
+                    window.location.href = "business_select.php";
+                }, 800);
+            } else {
+                showMessage(res.message || "Failed to create business", "danger");
+            }
+        },
+
+        error: function() {
+            showMessage("Network error", "danger");
         }
-    }, "json").fail(() => {
-        showMessage("Network error", "danger");
     });
 });
 </script>

@@ -1,124 +1,113 @@
-<?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
-include '../db.php'; // assumes $conn is your PDO connection
+<?php
 session_start();
 
-header('Content-Type: application/json');
+ini_set('display_errors', 0);   // Never print PHP warnings into JSON output
+ini_set('display_startup_errors', 0);
+error_reporting(E_ALL);
 
-// Ensure business is selected
-if (!isset($_SESSION['business_id'])) {
-    echo json_encode(['status' => 'error', 'message' => 'No business selected']);
-    exit;
-}
+require '../db.php';
 
-$business_id = $_SESSION['business_id'];
-$applyVat = isset($_POST['apply_vat']) && $_POST['apply_vat'] == 1;
-$vatRate = $applyVat ? 0.16 : 0;
-
-
-// Receive POST data
-$cart_json = $_POST['cart'] ?? '';
-$payment_method = $_POST['payment_method'] ?? 'cash';
-$customer_name = $_POST['customer_name'] ?? '';
-$cash_received = floatval($_POST['cash_received'] ?? 0);
-$credit_customer_id = intval($_POST['credit_customer_id'] ?? 0);
-
-// New: Discount from frontend
-$discount = floatval($_POST['discount'] ?? 0);
-if ($discount < 0) $discount = 0;
-
-if (!$cart_json) {
-    echo json_encode(['status' => 'error', 'message' => 'Empty cart']);
-    exit;
-}
-
-$cart = json_decode($cart_json, true);
-if (!$cart || count($cart) === 0) {
-    echo json_encode(['status' => 'error', 'message' => 'Invalid cart']);
-    exit;
-}
+header('Content-Type: application/json; charset=utf-8');
 
 try {
+    if (!isset($_SESSION['business_id'])) {
+        echo json_encode(['status' => 'error', 'message' => 'No business selected']);
+        exit;
+    }
+
+    $business_id = (int)$_SESSION['business_id'];
+
+    $applyVat = isset($_POST['apply_vat']) && (int)$_POST['apply_vat'] === 1;
+    $vatRate = $applyVat ? 0.16 : 0;
+
+    $cart_json = $_POST['cart'] ?? '';
+    $payment_method = $_POST['payment_method'] ?? 'cash';
+    $customer_name = trim($_POST['customer_name'] ?? '');
+    $cash_received = (float)($_POST['cash_received'] ?? 0);
+    $credit_customer_id = (int)($_POST['credit_customer_id'] ?? 0);
+    $draft_id = (int)($_POST['draft_id'] ?? 0);
+    $discount = max(0, (float)($_POST['discount'] ?? 0));
+
+    if (!$cart_json) {
+        echo json_encode(['status' => 'error', 'message' => 'Empty cart']);
+        exit;
+    }
+
+    $cart = json_decode($cart_json, true);
+    if (!is_array($cart) || count($cart) === 0) {
+        echo json_encode(['status' => 'error', 'message' => 'Invalid cart']);
+        exit;
+    }
+
     $conn->beginTransaction();
 
-    // Prepare statement to check full product details for this business
+    // Check stock
     $stockCheckStmt = $conn->prepare("SELECT name, barcode, description, stock_qty FROM products WHERE id = ? AND business_id = ?");
-
-    // Check stock availability
     foreach ($cart as $item) {
-        $pid = intval($item['id']);
-        $qty = floatval($item['qty']);  // decimal qty
+        $pid = (int)($item['id'] ?? 0);
+        $qty = (float)($item['qty'] ?? 0);
+
+        if ($pid <= 0 || $qty <= 0) {
+            throw new Exception("Invalid cart item found.");
+        }
 
         $stockCheckStmt->execute([$pid, $business_id]);
         $row = $stockCheckStmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($row) {
-            $item_name = $row['name'] ?? '';
-            $item_barcode = $row['barcode'] ?? '';
-            $item_description = $row['description'] ?? '';
-            $available_stock = floatval($row['stock_qty']); // decimal stock
-
-            if ($available_stock < $qty) {
-                throw new Exception(
-                    "Insufficient stock for product ID {$pid}. " .
-                    "Name: {$item_name}. " .
-                    "Barcode: {$item_barcode}. " .
-                    "Description: {$item_description}. " .
-                    "Available: {$available_stock}, Requested: {$qty}"
-                );
-            }
-        } else {
+        if (!$row) {
             throw new Exception("Product ID {$pid} not found for this business");
+        }
+
+        $available_stock = (float)$row['stock_qty'];
+        if ($available_stock < $qty) {
+            throw new Exception(
+                "Insufficient stock for product ID {$pid}. " .
+                "Name: " . ($row['name'] ?? '') . ". " .
+                "Barcode: " . ($row['barcode'] ?? '') . ". " .
+                "Description: " . ($row['description'] ?? '') . ". " .
+                "Available: {$available_stock}, Requested: {$qty}"
+            );
         }
     }
 
-    // Calculate total amount before discount
+    // Calculate total before discount
     $total = 0;
     foreach ($cart as $item) {
-        $qty = floatval($item['qty']);
-        $price = floatval($item['selling_price'] ?? $item['price'] ?? 0);
+        $qty = (float)($item['qty'] ?? 0);
+        $price = (float)($item['selling_price'] ?? $item['price'] ?? 0);
         $total += $qty * $price;
     }
     $total = round($total, 2);
 
-    // Calculate VAT amount on total BEFORE discount
-    $vat_amount = round($total * $vatRate, 2);
-
-    // Apply discount
-    $total_after_discount = $total - $discount;
-    if ($total_after_discount < 0) {
-        $total_after_discount = 0;
-    }
-
-    // Calculate total including VAT after discount
-    // VAT is on original total before discount; discount applies after VAT calculation
+    // Match frontend logic:
+    // totalAfterDiscount -> VAT applied on discounted total
+    $total_after_discount = max(0, $total - $discount);
+    $vat_amount = round($total_after_discount * $vatRate, 2);
     $total_including_vat = round($total_after_discount + $vat_amount, 2);
 
-    // If payment method is credit, ensure a customer is selected
     if ($payment_method === 'credit') {
         if ($credit_customer_id <= 0) {
             throw new Exception("You must select a customer for a credit sale.");
         }
-        // Verify customer belongs to this business
+
         $custCheck = $conn->prepare("SELECT id FROM customers WHERE id = ? AND business_id = ?");
         $custCheck->execute([$credit_customer_id, $business_id]);
+
         if (!$custCheck->fetch(PDO::FETCH_ASSOC)) {
             throw new Exception("Selected customer not found for this business.");
         }
     }
 
-    // Insert sale record with business_id and discount info + VAT info
+    // Insert sale
     $stmt = $conn->prepare("
-        INSERT INTO sales 
+        INSERT INTO sales
         (sale_number, total_amount, payment_type, customer_name, business_id, discount, user_name, created_at, vat_rate, vat_amount, total_including_vat)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     $sale_number = uniqid('S');
-    $created_at = date('Y-m-d H:i:s');  // PHP datetime for created_at
+    $created_at = date('Y-m-d H:i:s');
 
     $stmt->execute([
         $sale_number,
@@ -129,33 +118,33 @@ try {
         $discount,
         $_SESSION['user_name'] ?? 'Unknown',
         $created_at,
-        $vatRate * 100,    // Store as percentage 16
+        $vatRate * 100,
         $vat_amount,
         $total_including_vat
     ]);
 
     $sale_id = $conn->lastInsertId();
 
-    // Prepare statements for sale items and stock update
+    // Insert items + update stock
     $stmtItem = $conn->prepare("INSERT INTO sale_items (sale_id, product_id, quantity, price, subtotal, cost_price) VALUES (?, ?, ?, ?, ?, ?)");
     $updateStock = $conn->prepare("UPDATE products SET stock_qty = stock_qty - ? WHERE id = ? AND business_id = ?");
     $costStmt = $conn->prepare("SELECT cost_price FROM products WHERE id = ? AND business_id = ?");
 
     foreach ($cart as $item) {
-        $pid = intval($item['id']);
-        $qty = floatval($item['qty']);
-        $price = floatval($item['selling_price'] ?? $item['price'] ?? 0);
+        $pid = (int)($item['id'] ?? 0);
+        $qty = (float)($item['qty'] ?? 0);
+        $price = (float)($item['selling_price'] ?? $item['price'] ?? 0);
         $subtotal = round($price * $qty, 2);
 
         $costStmt->execute([$pid, $business_id]);
         $costRow = $costStmt->fetch(PDO::FETCH_ASSOC);
-        $cost_price = floatval($costRow['cost_price'] ?? 0);
+        $cost_price = (float)($costRow['cost_price'] ?? 0);
 
         $stmtItem->execute([$sale_id, $pid, $qty, $price, $subtotal, $cost_price]);
         $updateStock->execute([$qty, $pid, $business_id]);
     }
 
-    // Handle credit payment method updates
+    // Credit customer balance
     if ($payment_method === 'credit') {
         $now = date('Y-m-d H:i:s');
 
@@ -174,45 +163,44 @@ try {
         $tstmt->execute([$credit_customer_id, $sale_id, $total_after_discount, $created_at]);
     }
 
-    // Fetch business info dynamically for receipt
+    // Business info for receipt
     $businessInfoStmt = $conn->prepare("
-        SELECT business_name, business_address, business_email, business_phone 
+        SELECT business_name, business_address, business_email, business_phone
         FROM businesses WHERE id = ?
     ");
     $businessInfoStmt->execute([$business_id]);
-    $businessInfo = $businessInfoStmt->fetch(PDO::FETCH_ASSOC);
+    $businessInfo = $businessInfoStmt->fetch(PDO::FETCH_ASSOC) ?: [];
 
     $businessName = $businessInfo['business_name'] ?? 'Your Business Name';
     $businessAddress = $businessInfo['business_address'] ?? 'Business Location';
     $businessEmail = $businessInfo['business_email'] ?? '';
     $businessPhone = $businessInfo['business_phone'] ?? '';
-
-    // Get cashier's name from session
     $cashier_name = $_SESSION['user_name'] ?? 'Cashier';
 
-    // Generate receipt HTML
+    // Receipt HTML
     $receipt = "<div style='font-family:monospace; padding:10px; width:350px; text-align:center;'>";
-    $receipt .= "<h2 style='margin:0; margin-bottom:5px;'>RECEIPT</h2>";
+    $receipt .= "<h2 style='margin:0 0 5px 0;'>RECEIPT</h2>";
     $receipt .= "<h3 style='margin:0;'>" . htmlspecialchars($businessName) . "</h3>";
     $receipt .= "<small style='display:block; margin-bottom:3px;'>Location: " . nl2br(htmlspecialchars($businessAddress)) . "</small>";
+
     if ($businessEmail || $businessPhone) {
         $receipt .= "<small style='display:block; margin-bottom:8px;'>";
         if ($businessEmail) $receipt .= "Email: " . htmlspecialchars($businessEmail) . " ";
         if ($businessPhone) $receipt .= "Phone: " . htmlspecialchars($businessPhone);
         $receipt .= "</small>";
     }
+
     $receipt .= "<div style='text-align:left; font-size:12px; margin-bottom:6px;'>Date: {$created_at}</div>";
     $receipt .= "<hr style='border:1px dashed #000; margin:6px 0;'>";
-
     $receipt .= "<div style='text-align:left;'>Sale#: {$sale_number}</div>";
     $receipt .= "<table style='width:100%; border-collapse:collapse; margin-top:8px; font-size:13px;'>";
     $receipt .= "<tr><th style='text-align:left'>Item</th><th style='text-align:left'>Description</th><th>Q</th><th style='text-align:right'>Total</th></tr>";
 
     foreach ($cart as $item) {
-        $name = htmlspecialchars($item['name']);
+        $name = htmlspecialchars($item['name'] ?? '');
         $description = htmlspecialchars($item['description'] ?? '');
-        $qty = floatval($item['qty']);
-        $price = floatval($item['selling_price'] ?? $item['price'] ?? 0);
+        $qty = (float)($item['qty'] ?? 0);
+        $price = (float)($item['selling_price'] ?? $item['price'] ?? 0);
         $rowTotal = number_format($price * $qty, 2);
         $formattedQty = rtrim(rtrim(number_format($qty, 2), '0'), '.');
 
@@ -223,15 +211,17 @@ try {
         $receipt .= "<td style='text-align:right; vertical-align:top;'>{$rowTotal}</td>";
         $receipt .= "</tr>";
     }
-    $receipt .= "</table>";
 
+    $receipt .= "</table>";
     $receipt .= "<hr>";
+
     if ($discount > 0) {
         $receipt .= "<div style='display:flex; justify-content:space-between'><div>Discount</div><div>- KES " . number_format($discount, 2) . "</div></div>";
     }
+
     $receipt .= "<div style='display:flex; justify-content:space-between'><div>VAT (16%)</div><div>KES " . number_format($vat_amount, 2) . "</div></div>";
-    $receipt .= "<div style='display:flex; justify-content:space-between'><div><strong>Total (Excl. VAT & Discount)</strong></div><div><strong>KES " . number_format($total, 2) . "</strong></div></div>";
-    $receipt .= "<div style='display:flex; justify-content:space-between'><div><strong>Total (Incl. VAT & Discount)</strong></div><div><strong>KES " . number_format($total_including_vat, 2) . "</strong></div></div>";
+    $receipt .= "<div style='display:flex; justify-content:space-between'><div><strong>Total After Discount</strong></div><div><strong>KES " . number_format($total_after_discount, 2) . "</strong></div></div>";
+    $receipt .= "<div style='display:flex; justify-content:space-between'><div><strong>Total (Incl. VAT)</strong></div><div><strong>KES " . number_format($total_including_vat, 2) . "</strong></div></div>";
     $receipt .= "<div style='display:flex; justify-content:space-between'><div>Payment</div><div>" . htmlspecialchars($payment_method) . "</div></div>";
 
     if ($payment_method === 'cash') {
@@ -239,30 +229,54 @@ try {
         $change = max(0, $cash_received - $total_including_vat);
         $receipt .= "<div style='display:flex; justify-content:space-between'><div>Change</div><div>KES " . number_format($change, 2) . "</div></div>";
     } elseif ($payment_method === 'credit') {
-        $custName = '';
         $cq = $conn->prepare("SELECT name, phone FROM customers WHERE id = ? LIMIT 1");
         $cq->execute([$credit_customer_id]);
-        if ($crow = $cq->fetch(PDO::FETCH_ASSOC)) {
-            $custName = htmlspecialchars($crow['name']) . (!empty($crow['phone']) ? ' (' . htmlspecialchars($crow['phone']) . ')' : '');
+        $crow = $cq->fetch(PDO::FETCH_ASSOC);
+
+        $custName = 'N/A';
+        if ($crow) {
+            $custName = htmlspecialchars($crow['name'] ?? '');
+            if (!empty($crow['phone'])) {
+                $custName .= ' (' . htmlspecialchars($crow['phone']) . ')';
+            }
         }
-        $receipt .= "<div style='margin-top:6px; text-align:left;'>Customer on credit: " . ($custName ?: 'N/A') . "</div>";
+
+        $receipt .= "<div style='margin-top:6px; text-align:left;'>Customer on credit: {$custName}</div>";
     }
 
-    if (!empty($customer_name)) {
+    if ($customer_name !== '') {
         $receipt .= "<div style='margin-top:6px; text-align:left;'>Served to: " . htmlspecialchars($customer_name) . "</div>";
     }
 
-    // Cashier name
     $receipt .= "<div style='margin-top:6px; text-align:left;'>Cashier: " . htmlspecialchars($cashier_name) . "</div>";
-
     $receipt .= "<p style='text-align:center; margin-top:8px;'>Thank you for shopping with us!</p>";
     $receipt .= "</div>";
 
+    // Delete draft if sale completed
+    if ($draft_id > 0) {
+        $deleteDraft = $conn->prepare("DELETE FROM draft_orders WHERE id = ? AND business_id = ?");
+        $deleteDraft->execute([$draft_id, $business_id]);
+    }
+
     $conn->commit();
 
-    echo json_encode(['status' => 'ok', 'receipt_html' => $receipt]);
+    echo json_encode([
+        'status' => 'ok',
+        'receipt_html' => $receipt
+    ]);
+    exit;
 
-} catch (Exception $e) {
-    $conn->rollBack();
-    echo json_encode(['status' => 'error', 'message' => 'Exception: ' . $e->getMessage()]);
+} catch (Throwable $e) {
+    if (isset($conn) && $conn instanceof PDO && $conn->inTransaction()) {
+        $conn->rollBack();
+    }
+
+    error_log("make_sale.php error: " . $e->getMessage());
+
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Server error while completing sale'
+    ]);
+    exit;
 }
+
