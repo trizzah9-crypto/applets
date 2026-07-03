@@ -752,7 +752,7 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
         @media (max-width: 768px) {
             .container-fluid{
                 min-width: 110%; 
-            z-index: 100000000;
+           padding: 0;
             transform: translateX(-5%);
             margin: 0;
             position: relative;

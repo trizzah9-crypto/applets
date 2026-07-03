@@ -830,11 +830,12 @@ $orderGrowthDisplay    = $orderGrowth === null ? '—' : number_format(abs($orde
     .container-fluid,
     .premium-dashboard{
         width:100% !important;
-        max-width:100% !important;
+        min-width:107% !important;
         padding-left:10px !important;
         padding-right:10px !important;
         margin-left:0 !important;
         margin-right:0 !important;
+        transform: translateX(-12px);
     }
 
     .row{
