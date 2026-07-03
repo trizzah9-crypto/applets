@@ -241,7 +241,10 @@ if (!isset($_SESSION['business_id'])) {
         @media(max-width:768px){
 
             .page-card{
-                padding:20px !important;
+                margin-top: -30px;
+                padding:0 !important;
+                width: 130% !important;
+                transform: translateX(-12%);
             }
 
             .page-title{

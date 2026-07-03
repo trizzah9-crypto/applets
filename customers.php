@@ -550,31 +550,229 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
         }
         .fab i{ font-size: 1.3rem; }
         .mobile-compact{ display: block; }
+
         @media (max-width: 991.98px){
-            .crm-hero{ padding: 22px; }
-            .growth-widget{
-                min-height: 96px;
-                align-items:flex-start;
-                text-align:left;
-                margin-top: 18px;
+            .crm-shell{ padding: 14px 0 30px; }
+            .crm-hero{
+                padding: 18px !important;
+                border-radius: 20px;
             }
-            .crm-table{ min-width: 1140px; }
+            .crm-title{
+                font-size: 2rem;
+                line-height: 1.08;
+                margin: 10px 0 8px;
+            }
+            .crm-subtitle{
+                font-size: .9rem;
+                margin-bottom: 14px;
+            }
+            .crm-badge{
+                padding: 6px 11px;
+                font-size: .76rem;
+                gap: 6px;
+            }
+            .hero-pills{
+                gap: 8px;
+            }
+            .hero-pill{
+                padding: 9px 12px;
+                gap: 8px;
+                font-size: .88rem;
+            }
+            .hero-pill span{
+                min-width: 28px;
+                height: 28px;
+                padding: 0 8px;
+                font-size: .8rem;
+            }
+            .growth-widget{
+                min-height: 90px;
+                padding: 14px 16px;
+                border-radius: 18px;
+                font-size: 1.8rem;
+                gap: 4px;
+            }
+            .growth-widget small{
+                font-size: .82rem;
+            }
+            .glass-card,
+            .section-card,
+            .detail-section,
+            .modal-content.crm-modal{
+                border-radius: 18px;
+            }
+            .glass-card,
+            .section-card{
+                box-shadow: 0 12px 28px rgba(21,44,56,.06);
+            }
+            .section-card > .p-3.p-lg-4,
+            .glass-card.p-3.p-lg-4,
+            .detail-section .card-header,
+            .detail-section .card-body{
+                padding: 14px !important;
+            }
+            .section-title{
+                font-size: 1.05rem;
+            }
+            .crm-input,.form-control,.form-select{
+                border-radius: 16px !important;
+                padding: .65rem .85rem !important;
+            }
+            .crm-btn,
+            .crm-btn-outline{
+                border-radius: 16px;
+                padding-top: .65rem !important;
+                padding-bottom: .65rem !important;
+            }
+            .crm-stat-card{
+                padding: 14px 15px;
+                min-height: 110px;
+                border-radius: 18px;
+            }
+            .stat-icon{
+                width: 44px;
+                height: 44px;
+                font-size: 1.15rem;
+                border-radius: 14px;
+                margin-bottom: 12px;
+            }
+            .crm-stat-card h2{
+                font-size: 1.3rem;
+                line-height: 1.05;
+            }
+            .crm-stat-card p{
+                margin-top: 4px;
+                font-size: .88rem;
+            }
+            .summary-card{
+                padding: 14px;
+                min-height: 104px;
+                border-radius: 18px;
+            }
+            .summary-card .icon-bubble{
+                width: 40px;
+                height: 40px;
+                border-radius: 14px;
+                font-size: 1rem;
+                margin-bottom: 12px;
+            }
+            .summary-card h5{
+                font-size: 1.05rem;
+            }
+            .detail-section .card-header{
+                font-size: .98rem;
+            }
+            .customer-avatar{
+                width: 44px !important;
+                height: 44px !important;
+                border-radius: 14px !important;
+            }
+            .fab{
+                width: 54px;
+                height: 54px;
+                right: 14px;
+                bottom: 14px;
+            }
+            .fab i{ font-size: 1.15rem; }
+            .row.g-4,
+            .row.g-4.mb-4,
+            .row.g-4.mb-5{
+                --bs-gutter-x: 1rem;
+                --bs-gutter-y: 1rem;
+            }
+            .row.g-3.g-xl-4{
+                --bs-gutter-x: 1rem;
+                --bs-gutter-y: 1rem;
+            }
+            .crm-table-wrap{
+                overflow-x: hidden;
+            }
+            .crm-table,
+            #customerTable table{
+                min-width: 0 !important;
+                width: 100% !important;
+                table-layout: fixed;
+            }
+            #customerTable thead th,
+            #customerTable tbody td{
+                padding: 12px 10px;
+                font-size: .82rem;
+            }
+            #customerTable thead th:nth-child(n+6),
+            #customerTable tbody td:nth-child(n+6){
+                display: none;
+            }
         }
-        @media (max-width: 767.98px){
-            .hero-pills{ display:grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
-            .growth-widget{ width:100%; }
-            .crm-stat-card{ min-height: 130px; padding: 18px; }
-            .summary-card{ min-height: 108px; }
-            .mobile-compact .btn{ padding: .5rem .75rem; }
+
+        @media (min-width: 768px) and (max-width: 991.98px){
+            .crm-hero{
+                background: red  !important;
+               min-width: 700px  !important;
+               padding: 0  !important;
+               margin: 0  !important;
+            }
+            .crm-table-wrap{
+                overflow-x: hidden;
+            }
+            .crm-table,
+            #customerTable table{
+                min-width: 0 !important;
+                width: 100% !important;
+                table-layout: fixed;
+            }
+            #customerTable thead th,
+            #customerTable tbody td{
+                padding: 12px 10px;
+                font-size: .84rem;
+            }
+            #customerTable thead th:nth-child(n+6),
+            #customerTable tbody td:nth-child(n+6){
+                display: none;
+            }
         }
-</style>
+
+        @media (max-width: 575.98px){
+            .crm-hero{
+                padding: 16px !important;
+                border-radius: 18px;
+            }
+            .crm-title{
+                font-size: 1.65rem;
+            }
+            .hero-pills{
+                grid-template-columns: 1fr;
+            }
+            .crm-stat-card{
+                min-height: 105px;
+            }
+            .summary-card{
+                min-height: 100px;
+            }
+        }
+        @media (max-width: 768px) {
+            .container-fluid{
+                min-width: 110%; 
+            z-index: 100000000;
+            transform: translateX(-5%);
+            margin: 0;
+            position: relative;
+            }
+
+            body{
+                padding: 0;
+                margin: 0;
+            }
+        }
+
+
+    </style>
 </head>
 <body>
-<div class="container-fluid crm-shell px-3 px-lg-4">
+<div class="container-fluid px-3 px-lg-4 crm-shell container-fluid" style="">
 
     <div class="crm-hero mb-4">
         <div class="row align-items-center g-3 position-relative" style="z-index:1;">
-            <div class="col-lg-8">
+            <div class="col-md-8">
                 <div class="crm-badge mb-3">
                     <i class="bi bi-people-fill"></i>
                     CRM Intelligence Center
@@ -590,7 +788,7 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="hero-pill"><span><?= number_format($vipCustomers) ?></span> VIP Customers</div>
                 </div>
             </div>
-            <div class="col-lg-4 text-lg-end">
+            <div class="col-md-4 text-md-end">
                 <div class="growth-widget">
                     +18.4%
                     <small>Customer Growth</small>
@@ -601,28 +799,28 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <div class="row g-3 g-xl-4 mb-4">
-        <div class="col-lg-3 col-md-6">
+        <div class="col-sm-6 col-lg-3">
             <div class="crm-stat-card stat-teal">
                 <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
                 <h2><?= number_format($totalCustomers) ?></h2>
                 <p>Total Customers</p>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6">
+        <div class="col-sm-6 col-lg-3">
             <div class="crm-stat-card stat-orange">
                 <div class="stat-icon"><i class="bi bi-credit-card-2-front-fill"></i></div>
                 <h2>KES <?= number_format($outstandingCreditAmount, 2) ?></h2>
                 <p>Outstanding Credit Amount</p>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6">
+        <div class="col-sm-6 col-lg-3">
             <div class="crm-stat-card stat-purple">
                 <div class="stat-icon"><i class="bi bi-wallet2"></i></div>
                 <h2><?= number_format($customersWithBalances) ?></h2>
                 <p>Customers With Balances</p>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6">
+        <div class="col-sm-6 col-lg-3">
             <div class="crm-stat-card stat-blue">
                 <div class="stat-icon"><i class="bi bi-calendar2-plus-fill"></i></div>
                 <h2><?= number_format($newCustomersThisMonth) ?></h2>
@@ -630,28 +828,28 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 
-        <div class="col-lg-3 col-md-6">
+        <div class="col-sm-6 col-lg-3">
             <div class="crm-stat-card stat-teal">
                 <div class="stat-icon"><i class="bi bi-stars"></i></div>
                 <h2><?= number_format($totalLoyaltyPoints) ?></h2>
                 <p>Total Loyalty Points Issued</p>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6">
+        <div class="col-sm-6 col-lg-3">
             <div class="crm-stat-card stat-orange">
                 <div class="stat-icon"><i class="bi bi-graph-up-arrow"></i></div>
                 <h2>KES <?= number_format($averageCustomerValue, 2) ?></h2>
                 <p>Average Customer Value</p>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6">
+        <div class="col-sm-6 col-lg-3">
             <div class="crm-stat-card stat-purple">
                 <div class="stat-icon"><i class="bi bi-star-fill"></i></div>
                 <h2><?= number_format($vipCustomers) ?></h2>
                 <p>VIP Customers</p>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6">
+        <div class="col-sm-6 col-lg-3">
             <div class="crm-stat-card stat-blue">
                 <div class="stat-icon"><i class="bi bi-bag-heart-fill"></i></div>
                 <h2>KES <?= number_format($largestOutstandingBalance, 2) ?></h2>
@@ -680,19 +878,19 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
                     <div id="msg"></div>
 
                     <div class="row g-3">
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-sm-6 col-lg-3">
                             <label class="form-label fw-semibold">Full Name</label>
                             <input id="name" class="form-control crm-input" placeholder="Customer name">
                         </div>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-sm-6 col-lg-3">
                             <label class="form-label fw-semibold">Phone Number</label>
                             <input id="phone" class="form-control crm-input" placeholder="2547XXXXXXXX or 07XXXXXXXX">
                         </div>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-sm-6 col-lg-3">
                             <label class="form-label fw-semibold">Email</label>
                             <input id="email" class="form-control crm-input" placeholder="email@domain.com">
                         </div>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-sm-6 col-lg-3">
                             <label class="form-label fw-semibold">Customer Type</label>
                             <select id="customer_type" class="form-select crm-input">
                                 <option value="Walk-in">Walk-in</option>
@@ -702,28 +900,28 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
                             </select>
                         </div>
 
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-sm-6 col-lg-3">
                             <label class="form-label fw-semibold">Company Name</label>
                             <input id="company_name" class="form-control crm-input" placeholder="Company or business name">
                         </div>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-sm-6 col-lg-3">
                             <label class="form-label fw-semibold">Credit Limit</label>
                             <input id="credit_limit" type="number" step="0.01" min="0" class="form-control crm-input" placeholder="0.00">
                         </div>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-sm-6 col-lg-3">
                             <label class="form-label fw-semibold">Date of Birth</label>
                             <input id="date_of_birth" type="date" class="form-control crm-input">
                         </div>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-sm-6 col-lg-3">
                             <label class="form-label fw-semibold">Tax PIN</label>
                             <input id="tax_pin" class="form-control crm-input" placeholder="KRA PIN">
                         </div>
 
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-sm-6 col-lg-4">
                             <label class="form-label fw-semibold">Address</label>
                             <input id="address" class="form-control crm-input" placeholder="Customer location">
                         </div>
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-sm-6 col-lg-4">
                             <label class="form-label fw-semibold">Status</label>
                             <select id="status" class="form-select crm-input">
                                 <option value="Active">Active</option>
@@ -731,17 +929,17 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
                                 <option value="Blocked">Blocked</option>
                             </select>
                         </div>
-                        <div class="col-lg-4 col-md-12">
+                        <div class="col-12 col-lg-4">
                             <label class="form-label fw-semibold">Notes</label>
                             <input id="notes" class="form-control crm-input" placeholder="Internal notes, preferences, remarks">
                         </div>
                     </div>
 
                     <div class="d-flex gap-2 mt-4 flex-wrap">
-                        <button id="saveCustomer" class="btn crm-btn px-4 py-3">
+                        <button id="saveCustomer" class="btn crm-btn px-3 py-2 py-lg-3">
                             <i class="bi bi-plus-circle-fill me-2"></i>Save Customer
                         </button>
-                        <button id="clearCustomerForm" class="btn crm-btn-outline px-4 py-3">
+                        <button id="clearCustomerForm" class="btn crm-btn-outline px-3 py-2 py-lg-3">
                             <i class="bi bi-eraser-fill me-2"></i>Clear
                         </button>
                     </div>
@@ -799,12 +997,12 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
 
         <div class="row g-3 mt-1 mobile-compact">
             <div class="col-12 col-lg-3">
-                <button id="applyFilters" class="btn crm-btn w-100 py-3">
+                <button id="applyFilters" class="btn crm-btn w-100 py-2 py-lg-3">
                     <i class="bi bi-funnel-fill me-2"></i>Apply Filters
                 </button>
             </div>
             <div class="col-12 col-lg-3">
-                <button id="resetFilters" class="btn crm-btn-outline w-100 py-3">
+                <button id="resetFilters" class="btn crm-btn-outline w-100 py-2 py-lg-3">
                     <i class="bi bi-arrow-counterclockwise me-2"></i>Reset
                 </button>
             </div>
@@ -832,7 +1030,7 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <div class="row g-4 mb-5">
-        <div class="col-lg-4">
+        <div class="col-sm-6 col-lg-4">
             <div class="section-card h-100">
                 <div class="p-3 p-lg-4 border-bottom">
                     <h4 class="section-title mb-1">Top Customers by Spending</h4>
@@ -854,7 +1052,7 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-sm-6 col-lg-4">
             <div class="section-card h-100">
                 <div class="p-3 p-lg-4 border-bottom">
                     <h4 class="section-title mb-1">Top Customers by Credit</h4>
@@ -878,7 +1076,7 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-sm-6 col-lg-4">
             <div class="section-card h-100">
                 <div class="p-3 p-lg-4 border-bottom">
                     <h4 class="section-title mb-1">Most Loyal Customers</h4>
@@ -911,7 +1109,7 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
                         <?php if (!$recentRegs): ?>
                             <div class="col-12 text-muted">No recent registrations found.</div>
                         <?php else: foreach ($recentRegs as $row): ?>
-                            <div class="col-md-6 col-xl-4">
+                            <div class="col-sm-6 col-lg-4">
                                 <div class="summary-card">
                                     <div class="icon-bubble sum-teal"><i class="bi bi-person-badge"></i></div>
                                     <h5><?= h($row['name']) ?></h5>
@@ -1080,20 +1278,20 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                             <div class="col-lg-4 text-lg-end">
                                 <div class="d-flex gap-2 flex-wrap justify-content-lg-end">
-                                    <a class="btn btn-success rounded-4" href="tel:${escapeHtml(c.phone_tel || '')}"><i class="bi bi-telephone-fill me-1"></i>Call</a>
-                                    <a class="btn btn-success rounded-4" target="_blank" href="https://wa.me/${escapeHtml(c.phone_wa || '')}"><i class="bi bi-whatsapp me-1"></i>WhatsApp</a>
-                                    <a class="btn btn-primary rounded-4" href="sms:${escapeHtml(c.phone_sms || '')}"><i class="bi bi-chat-dots-fill me-1"></i>SMS</a>
-                                    <button type="button" class="btn btn-dark rounded-4" onclick="window.print()"><i class="bi bi-printer-fill me-1"></i>Print</button>
+                                    <a class="btn btn-success rounded-4 px-3 py-2" href="tel:${escapeHtml(c.phone_tel || '')}"><i class="bi bi-telephone-fill me-1"></i>Call</a>
+                                    <a class="btn btn-success rounded-4 px-3 py-2" target="_blank" href="https://wa.me/${escapeHtml(c.phone_wa || '')}"><i class="bi bi-whatsapp me-1"></i>WhatsApp</a>
+                                    <a class="btn btn-primary rounded-4 px-3 py-2" href="sms:${escapeHtml(c.phone_sms || '')}"><i class="bi bi-chat-dots-fill me-1"></i>SMS</a>
+                                    <button type="button" class="btn btn-dark rounded-4 px-3 py-2" onclick="window.print()"><i class="bi bi-printer-fill me-1"></i>Print</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="row g-3 g-lg-4 mb-4">
-                        <div class="col-md-6 col-xl-3"><div class="summary-card"><div class="icon-bubble sum-orange"><i class="bi bi-cash-stack"></i></div><h5>KES ${money(s.current_balance)}</h5><small>Outstanding Credit</small></div></div>
-                        <div class="col-md-6 col-xl-3"><div class="summary-card"><div class="icon-bubble sum-teal"><i class="bi bi-bag-check-fill"></i></div><h5>KES ${money(s.lifetime_purchases)}</h5><small>Lifetime Purchases</small></div></div>
-                        <div class="col-md-6 col-xl-3"><div class="summary-card"><div class="icon-bubble sum-purple"><i class="bi bi-stars"></i></div><h5>${escapeHtml(s.loyalty_points || 0)} pts</h5><small>Loyalty Points</small></div></div>
-                        <div class="col-md-6 col-xl-3"><div class="summary-card"><div class="icon-bubble sum-green"><i class="bi bi-arrow-repeat"></i></div><h5>${escapeHtml(s.transaction_count || 0)}</h5><small>Number of Transactions</small></div></div>
+                        <div class="col-sm-6 col-lg-3"><div class="summary-card"><div class="icon-bubble sum-orange"><i class="bi bi-cash-stack"></i></div><h5>KES ${money(s.current_balance)}</h5><small>Outstanding Credit</small></div></div>
+                        <div class="col-sm-6 col-lg-3"><div class="summary-card"><div class="icon-bubble sum-teal"><i class="bi bi-bag-check-fill"></i></div><h5>KES ${money(s.lifetime_purchases)}</h5><small>Lifetime Purchases</small></div></div>
+                        <div class="col-sm-6 col-lg-3"><div class="summary-card"><div class="icon-bubble sum-purple"><i class="bi bi-stars"></i></div><h5>${escapeHtml(s.loyalty_points || 0)} pts</h5><small>Loyalty Points</small></div></div>
+                        <div class="col-sm-6 col-lg-3"><div class="summary-card"><div class="icon-bubble sum-green"><i class="bi bi-arrow-repeat"></i></div><h5>${escapeHtml(s.transaction_count || 0)}</h5><small>Number of Transactions</small></div></div>
                     </div>
 
                     <div class="row g-4 mb-4">
@@ -1146,13 +1344,13 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
                                         <button type="button" class="btn crm-btn" id="detailPayBtn" data-id="${escapeHtml(c.id)}">
                                             <i class="bi bi-check-circle-fill me-1"></i>Record Payment
                                         </button>
-                                        <button type="button" class="btn btn-outline-success rounded-4" id="detailAddCreditBtn" data-id="${escapeHtml(c.id)}">
+                                        <button type="button" class="btn btn-outline-success rounded-4 px-3 py-2" id="detailAddCreditBtn" data-id="${escapeHtml(c.id)}">
                                             <i class="bi bi-plus-circle me-1"></i>Add Credit
                                         </button>
-                                        <button type="button" class="btn btn-outline-danger rounded-4" id="detailReduceCreditBtn" data-id="${escapeHtml(c.id)}">
+                                        <button type="button" class="btn btn-outline-danger rounded-4 px-3 py-2" id="detailReduceCreditBtn" data-id="${escapeHtml(c.id)}">
                                             <i class="bi bi-dash-circle me-1"></i>Reduce Credit
                                         </button>
-                                        <button type="button" class="btn btn-outline-dark rounded-4" onclick="window.print()">
+                                        <button type="button" class="btn btn-outline-dark rounded-4 px-3 py-2" onclick="window.print()">
                                             <i class="bi bi-printer me-1"></i>Print Statement
                                         </button>
                                     </div>
@@ -1186,7 +1384,7 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-sm-6 col-lg-4">
                             <div class="detail-section mb-4">
                                 <div class="card-header p-3 p-lg-4">
                                     Payment History
