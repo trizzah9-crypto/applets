@@ -988,8 +988,8 @@ $orderGrowthDisplay    = $orderGrowth === null ? '—' : number_format(abs($orde
     }
 
     .stat-card{
-          min-height:118px !important;
-        height:100%;
+          min-height:90% !important;
+        height:70%;
         border-radius:20px !important;
         box-shadow:
             0 8px 25px rgba(14,37,62,.10),
