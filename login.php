@@ -210,7 +210,7 @@
   <!-- RIGHT SIDE -->
   <div class="right">
     <form id="loginForm" >
-      <img style="width: 150px;" src="Images/logo.png" alt="Logo" class="logo" />
+      <img style="width: 150px;" src="images/logo.png" alt="Logo" class="logo" />
       <h2>Admin Login</h2>
 
       <input type="email" name="email" placeholder="Email" required />
