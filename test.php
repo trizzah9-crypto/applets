@@ -1,47 +1,56 @@
 <?php
-
-require_once 'db.php'; // Provides $conn
+require 'db.php';
 
 try {
 
-    $sql = "
-    CREATE TABLE IF NOT EXISTS payments (
+    $check = $conn->query("
+        PRAGMA table_info(categories)
+    ");
 
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+    $columns = $check->fetchAll(PDO::FETCH_ASSOC);
 
-        order_tracking_id TEXT,
+    $exists = false;
 
-        merchant_reference TEXT UNIQUE NOT NULL,
+    foreach ($columns as $column) {
+        if ($column['name'] === 'business_id') {
+            $exists = true;
+            break;
+        }
+    }
 
-        customer_name TEXT NOT NULL,
+    if (!$exists) {
 
-        customer_email TEXT,
+        $conn->exec("
+            ALTER TABLE categories
+            ADD COLUMN business_id INTEGER
+        ");
 
-        customer_phone TEXT,
+        echo "
+        <div style='padding:15px;background:#d4edda;color:#155724;
+        border:1px solid #c3e6cb;border-radius:8px'>
+            Categories table altered successfully.<br>
+            Column <b>business_id</b> added.
+        </div>
+        ";
 
-        amount REAL NOT NULL,
+    } else {
 
-        currency TEXT NOT NULL DEFAULT 'KES',
+        echo "
+        <div style='padding:15px;background:#fff3cd;color:#856404;
+        border:1px solid #ffeeba;border-radius:8px'>
+            Table already altered.<br>
+            Column <b>business_id</b> already exists.
+        </div>
+        ";
+    }
 
-        status TEXT NOT NULL DEFAULT 'PENDING',
+} catch(PDOException $e) {
 
-        payment_method TEXT,
-
-        confirmation_code TEXT,
-
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-
-    );
+    echo "
+    <div style='padding:15px;background:#f8d7da;color:#721c24;
+    border:1px solid #f5c6cb;border-radius:8px'>
+        Error:<br>
+        {$e->getMessage()}
+    </div>
     ";
-
-    $conn->exec($sql);
-
-    echo "✅ Payments table created successfully.";
-
-} catch (PDOException $e) {
-
-    die("Migration failed: " . $e->getMessage());
-
 }
