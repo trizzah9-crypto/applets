@@ -660,71 +660,7 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
-    <div class="glass-card p-3 p-lg-4 mb-4">
-        <div class="row align-items-center g-3">
-            <div class="col-12 col-lg-3">
-                <label class="form-label fw-semibold mb-2">Search customers</label>
-                <input type="text" id="searchCustomer" class="form-control crm-input" placeholder="Search by name, phone, email">
-            </div>
-            <div class="col-6 col-lg-2">
-                <label class="form-label fw-semibold mb-2">Type</label>
-                <select id="filterType" class="form-select crm-input">
-                    <option value="">All Types</option>
-                    <option value="Retail">Retail</option>
-                    <option value="Wholesale">Wholesale</option>
-                    <option value="VIP">VIP</option>
-                    <option value="Walk-in">Walk-in</option>
-                </select>
-            </div>
-            <div class="col-6 col-lg-2">
-                <label class="form-label fw-semibold mb-2">Status</label>
-                <select id="filterStatus" class="form-select crm-input">
-                    <option value="">All Status</option>
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                    <option value="Blocked">Blocked</option>
-                </select>
-            </div>
-            <div class="col-6 col-lg-2">
-                <label class="form-label fw-semibold mb-2">Balances</label>
-                <select id="filterBalance" class="form-select crm-input">
-                    <option value="">All</option>
-                    <option value="with_balance">With Outstanding Balances</option>
-                    <option value="no_balance">No Outstanding Balance</option>
-                </select>
-            </div>
-            <div class="col-6 col-lg-1">
-                <label class="form-label fw-semibold mb-2">Points</label>
-                <input type="number" id="filterPointsMin" class="form-control crm-input" placeholder="0" min="0">
-            </div>
-            <div class="col-6 col-lg-1">
-                <label class="form-label fw-semibold mb-2">From</label>
-                <input type="date" id="filterFrom" class="form-control crm-input">
-            </div>
-            <div class="col-6 col-lg-1">
-                <label class="form-label fw-semibold mb-2">To</label>
-                <input type="date" id="filterTo" class="form-control crm-input">
-            </div>
-        </div>
-
-        <div class="row g-3 mt-1 mobile-compact">
-            <div class="col-12 col-lg-3">
-                <button id="applyFilters" class="btn crm-btn w-100 py-3">
-                    <i class="bi bi-funnel-fill me-2"></i>Apply Filters
-                </button>
-            </div>
-            <div class="col-12 col-lg-3">
-                <button id="resetFilters" class="btn crm-btn-outline w-100 py-3">
-                    <i class="bi bi-arrow-counterclockwise me-2"></i>Reset
-                </button>
-            </div>
-            <div class="col-12 col-lg-6 text-lg-end d-none d-lg-block">
-                <span class="text-muted fw-semibold">
-                    Premium customer registry with credit and loyalty intelligence
-                </span>
-            </div>
-        </div>
-    </div>
+    
 
     <div class="row g-4 mb-4">
         <div class="col-lg-12">
@@ -810,6 +746,72 @@ $recentRegs = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
                         </button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card p-3 p-lg-4 mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-12 col-lg-3">
+                <label class="form-label fw-semibold mb-2">Search customers</label>
+                <input type="text" id="searchCustomer" class="form-control crm-input" placeholder="Search by name, phone, email">
+            </div>
+            <div class="col-6 col-lg-2">
+                <label class="form-label fw-semibold mb-2">Type</label>
+                <select id="filterType" class="form-select crm-input">
+                    <option value="">All Types</option>
+                    <option value="Retail">Retail</option>
+                    <option value="Wholesale">Wholesale</option>
+                    <option value="VIP">VIP</option>
+                    <option value="Walk-in">Walk-in</option>
+                </select>
+            </div>
+            <div class="col-6 col-lg-2">
+                <label class="form-label fw-semibold mb-2">Status</label>
+                <select id="filterStatus" class="form-select crm-input">
+                    <option value="">All Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                    <option value="Blocked">Blocked</option>
+                </select>
+            </div>
+            <div class="col-6 col-lg-2">
+                <label class="form-label fw-semibold mb-2">Balances</label>
+                <select id="filterBalance" class="form-select crm-input">
+                    <option value="">All</option>
+                    <option value="with_balance">With Outstanding Balances</option>
+                    <option value="no_balance">No Outstanding Balance</option>
+                </select>
+            </div>
+            <div class="col-6 col-lg-1">
+                <label class="form-label fw-semibold mb-2">Points</label>
+                <input type="number" id="filterPointsMin" class="form-control crm-input" placeholder="0" min="0">
+            </div>
+            <div class="col-6 col-lg-1">
+                <label class="form-label fw-semibold mb-2">From</label>
+                <input type="date" id="filterFrom" class="form-control crm-input">
+            </div>
+            <div class="col-6 col-lg-1">
+                <label class="form-label fw-semibold mb-2">To</label>
+                <input type="date" id="filterTo" class="form-control crm-input">
+            </div>
+        </div>
+
+        <div class="row g-3 mt-1 mobile-compact">
+            <div class="col-12 col-lg-3">
+                <button id="applyFilters" class="btn crm-btn w-100 py-3">
+                    <i class="bi bi-funnel-fill me-2"></i>Apply Filters
+                </button>
+            </div>
+            <div class="col-12 col-lg-3">
+                <button id="resetFilters" class="btn crm-btn-outline w-100 py-3">
+                    <i class="bi bi-arrow-counterclockwise me-2"></i>Reset
+                </button>
+            </div>
+            <div class="col-12 col-lg-6 text-lg-end d-none d-lg-block">
+                <span class="text-muted fw-semibold">
+                    Premium customer registry with credit and loyalty intelligence
+                </span>
             </div>
         </div>
     </div>
