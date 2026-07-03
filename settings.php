@@ -20,10 +20,10 @@ if (!$userId) {
 $stmt = $conn->prepare("
     SELECT business_name, business_email, business_phone, business_address, receipt_logo 
     FROM businesses 
-    WHERE owner_user_id = ?
+    WHERE id = ?
     LIMIT 1
 ");
-$stmt->execute([$userId]);
+$stmt->execute([$_SESSION['business_id']]);
 $settings = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$settings) {

@@ -40,10 +40,10 @@ if ($name === '') {
 $stmt = $conn->prepare("
     SELECT receipt_logo
     FROM businesses
-    WHERE owner_user_id = ?
+    WHERE id = ?
     LIMIT 1
 ");
-$stmt->execute([$userId]);
+$stmt->execute([$_SESSION['business_id']]);
 
 $currentBusiness = $stmt->fetch(PDO::FETCH_ASSOC);
 $currentLogo = $currentBusiness['receipt_logo'] ?? null;
@@ -150,7 +150,7 @@ try {
                 business_phone = ?,
                 business_address = ?,
                 receipt_logo = ?
-            WHERE owner_user_id = ?
+            WHERE id = ?
         ";
 
         $stmt = $conn->prepare($sql);
@@ -161,7 +161,7 @@ try {
             $phone,
             $address,
             $logoPath,
-            $userId
+           $_SESSION['business_id']
         ]);
 
     } else {
@@ -173,7 +173,7 @@ try {
                 business_email = ?,
                 business_phone = ?,
                 business_address = ?
-            WHERE owner_user_id = ?
+            WHERE id = ?
         ";
 
         $stmt = $conn->prepare($sql);
@@ -183,7 +183,7 @@ try {
             $email,
             $phone,
             $address,
-            $userId
+            $_SESSION['business_id']
         ]);
     }
 

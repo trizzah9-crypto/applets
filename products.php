@@ -467,6 +467,7 @@ include 'db.php';
             <th>Email</th>
             <th>Location</th>
             <th>Payment Method</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody></tbody>
@@ -986,6 +987,7 @@ $(document).ready(function() {
     }
 
     loadCategories();
+    loadSuppliersTable();
 
     // Add new category via modal
     window.addCategory = function() {
@@ -1431,11 +1433,34 @@ function loadSuppliersTable() {
             row.append($('<td>').text(supplier.email || '-'));
             row.append($('<td>').text(supplier.location || '-'));
             row.append($('<td>').text(supplier.payment_method.charAt(0).toUpperCase() + supplier.payment_method.slice(1)));
+            row.append(`
+                <td>
+                    <button class="btn btn-sm btn-warning edit-supplier"
+                            data-id="${supplier.supplier_id}">
+                        Edit
+                    </button>
+                </td>
+            `);
             tbody.append(row);
         });
     });
 }
 
+$(document).on('click', '.edit-supplier', function() {
+    const id = $(this).data('id');
+
+    $.getJSON('ajax/get_suppliers.php', { id }, function(supplier) {
+        $('#supplierName').val(supplier.name);
+        $('#supplierPhone').val(supplier.phone);
+        $('#supplierEmail').val(supplier.email);
+        $('#supplierLocation').val(supplier.location);
+        $('#supplierPaymentMethod').val(supplier.payment_method);
+
+        $('#addSupplierForm').append(
+            `<input type="hidden" name="supplier_id" value="${id}" id="editingSupplierId">`
+        );
+    });
+});
 
 
 </script>
