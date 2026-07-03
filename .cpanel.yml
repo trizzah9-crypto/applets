@@ -1,4 +1,20 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/ryhqbdyl/mambapos.francobridgeinterpretations.com/
-    - /bin/cp -R * $DEPLOYPATH
+
+    # Copy directories containing application code
+    - /bin/cp -R ajax $DEPLOYPATH
+    - /bin/cp -R css $DEPLOYPATH
+    - /bin/cp -R js $DEPLOYPATH
+    - /bin/cp -R libs $DEPLOYPATH
+    - /bin/cp -R scss $DEPLOYPATH
+    - /bin/cp -R vendor $DEPLOYPATH
+    - /bin/cp -R icons $DEPLOYPATH
+    - /bin/cp -R audios $DEPLOYPATH
+    - /bin/cp -R documentation $DEPLOYPATH
+
+    # Copy all PHP files in the project root
+    - /bin/find . -maxdepth 1 -type f -name "*.php" -exec /bin/cp {} $DEPLOYPATH \;
+
+    # Copy HTML files
+    - /bin/find . -maxdepth 1 -type f -name "*.html" -exec /bin/cp {} $DEPLOYPATH \;
