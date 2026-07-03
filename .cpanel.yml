@@ -1,0 +1,4 @@
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/ryhqbdyl/mambapos.francobridgeinterpretations.com/
+    - /bin/cp -R * $DEPLOYPATH
